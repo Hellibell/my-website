@@ -38,11 +38,13 @@ body {
   opacity: 0.8;
 }
 
-.social-links a {
-  margin: 10px;
-  font-size: 22px;
-  color: white;
-  transition: 0.3s;
+.socials a img {
+  width: 32px;
+  height: 32px;
+  margin: 0 10px;
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
 }
 
 .social-links a:hover {
