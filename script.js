@@ -1,14 +1,8 @@
-// script.js
+// ตัวอย่างถ้าต้องการแจ้ง alert เวลาคลิก
+const links = document.querySelectorAll(".links a");
 
-// แสดงข้อความตอนโหลดหน้าเว็บ
-window.addEventListener('DOMContentLoaded', () => {
-    console.log("Welcome to 3a1tr Online!");
+links.forEach(link => {
+  link.addEventListener("click", () => {
+    console.log(`Opening ${link.href}`);
+  });
 });
-
-// เพิ่ม event ให้ปุ่มดาวน์โหลด
-const downloadButton = document.querySelector('a.button');
-if (downloadButton) {
-    downloadButton.addEventListener('click', (e) => {
-        alert("กำลังดาวน์โหลดสคริปต์...");
-    });
-}
