@@ -46,6 +46,47 @@
     }
   </style>
 </head>
+    <title>Toggle Background & Text Color</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      transition: background 0.3s, color 0.3s;
+      background: white;   /* เริ่มต้น พื้นหลังขาว */
+      color: black;        /* ข้อความดำ (ตรงข้าม) */
+      text-align: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    body.dark {
+      background: black;   /* พื้นหลังดำ */
+      color: white;        /* ข้อความขาว (ตรงข้าม) */
+    }
+
+    .toggle-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: 2px solid #b74b4b;
+      background: none;
+      color: #b74b4b;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+
+    .toggle-btn:hover {
+      background: #b74b4b;
+      color: white;
+    }
+  </style>
+</head>
+<body>
 <body>
   <button class="toggle-btn" onclick="toggleBackground()">สลับโหมด ขาว/ดำ</button>
 
