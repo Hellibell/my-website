@@ -45,41 +45,7 @@
       
     </div>
   </div>
-
-<head>
-    <title>Music Player</title>
-    <link rel="stylesheet" href="player.css">
-</head>
-<body>
-    <img src="./assets/images/lemonade.png" id="background" />
-    <audio src="./assets/music/beyonce.mp3" id="song"></audio>
-
-    <div class="container">  
-        <div class="box"></div>      
-        <img src="./assets/images/lemonade.png" id="thumbnail" />
-
-        <img src="https://cdn.discordapp.com/attachments/1382651516480917504/1409603430368018462/play.jpg?ex=68adfafe&is=68aca97e&hm=ae06b360b2a7a423b7c7f2315ccab73793dfed4743a87fd12f9531b3f9dfe398&" onclick="playPause()" id="play-pause" />
-        <img src="https://cdn.discordapp.com/attachments/1382651516480917504/1409603616645582919/forward.jpg?ex=68adfb2b&is=68aca9ab&hm=7878a0926f037295fb9f28d295bd3f5f681802fb6a1a7f267838668177f6ad4b&" onclick="nextSong()" id="next-song" />
-        <img src="https://cdn.discordapp.com/attachments/1382651516480917504/1409603775341006848/backward.jpg?ex=68adfb51&is=68aca9d1&hm=c794fe8dedfb6a3710b382e634df026acd4f08b3696e9748afccb7bfc36bbf67&" onclick="previousSong()" id="previous-song" />
-
-        <div class="song-artist">Beyonce</div>
-        <div class="song-title">Don't Hurt Yourself</div>
-
-        <!-- Input element for progress bar - min=0 starting value of every song - max length will change per song so leave empty -->
-
-        <input 
-            type="range" 
-            id="progress-bar" 
-            min="0" 
-            max="" 
-            value="0" 
-            onchange="changeProgressBar()"
-        />
-
-        <div class="currentTime"></div>
-        <div class="durationTime"></div>
-    </div>
-  
+    
 
   <script src="script.js"></script>
 </body>
