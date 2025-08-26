@@ -1,13 +1,16 @@
+/* ====== พื้นฐาน ====== */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   color: white;
   text-align: center;
 }
+
 .a {
   text-decoration: none;
 }
 
+/* ====== พื้นหลัง ====== */
 .background {
   background: url("assets/Photo/background.jpg") no-repeat center center;
   background-size: cover; /* เต็มจอแบบไม่บี้ */
@@ -19,9 +22,9 @@ body {
   z-index: -1;
 }
 
-/* กล่องโปรไฟล์ */
+/* ====== กล่องโปรไฟล์ ====== */
 .card {
-  background: rgba(30, 30, 60, 0.6);
+  background: rgba(30, 30, 60, 0.6); /* โปร่งแสง */
   padding: 20px;
   border-radius: 20px;
   margin: 50px auto;
@@ -30,58 +33,77 @@ body {
   position: relative;
 }
 
+/* ====== ตัวเลขผู้เข้าชม ====== */
 .view-counter {
   position: absolute;
   top: 10px;
   left: 10px;
-  background: transparent; /* โปร่งแสง */
+  background: rgba(30, 30, 60, 0.6); /* โปร่งแสงเหมือน card */
   padding: 5px 10px;
   border-radius: 12px;
   font-size: 14px;
   color: white;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
+/* ====== Avatar ====== */
 .avatar {
   width: 80px;
   border-radius: 50%;
+  margin: 10px 0;
 }
 
+/* ====== ดาว ====== */
 .stars {
   font-size: 20px;
   margin: 10px 0;
 }
 
+/* ====== สถานที่ ====== */
 .location {
   font-size: 14px;
   opacity: 0.8;
 }
 
+/* ====== ไอคอนโซเชียล ====== */
+.social-links {
+  margin-top: 10px;
+}
+
 .social-links a {
   text-decoration: none; /* ลบเส้นใต้ */
-  display: inline-block; /* ให้จัดเรียงไอคอนได้ง่าย */
+  display: inline-block; /* จัดเรียงไอคอนได้ง่าย */
+  margin: 0 4px;
 }
 
 .social-links a img {
   vertical-align: middle; /* จัดให้อยู่กลางแนวเส้นบรรทัด */
   border: none;           /* ลบขอบถ้ามี */
+  width: 32px;
+  height: 32px;
 }
 
+/* ====== รายงาน/ข้อความ ====== */
 .my-report {
-    background: rgba(30, 30, 60, 0.6); /* พื้นหลังสีขาวโปร่ง 60% */
-    padding: 20px;
-    border-radius: 20px;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    line-height: 1.6;
+  background: rgba(30, 30, 60, 0.6); /* โปร่งแสง */
+  padding: 20px;
+  border-radius: 20px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  line-height: 1.6;
+  margin: 20px auto;
+  width: 80%;
+  max-width: 500px;
 }
 
-/* ปรับลิสต์ให้เลขชิดข้อความ */
+/* ====== ลิสต์ ====== */
 .my-report ol {
-    padding-left: 20px; /* เลขเริ่มชิดข้อความมากขึ้น */
+  padding-left: 20px; /* เลขเริ่มชิดข้อความมากขึ้น */
 }
 
 .my-report li {
-    margin-bottom: 5px; /* ลดระยะห่างแต่ละข้อ */
+  margin-bottom: 5px; /* ลดระยะห่างแต่ละข้อ */
 }
-
