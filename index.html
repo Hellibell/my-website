@@ -54,6 +54,20 @@
 <div class="my-report">
     <h2></h2>
 
+    <script>
+    // ดึงค่าที่เคยเก็บไว้ ถ้ายังไม่มีให้เริ่มจาก 0
+    let views = localStorage.getItem("siteViews") || 0;
+
+    // แปลงเป็นตัวเลขแล้ว +1
+    views = parseInt(views) + 1;
+
+    // เก็บค่ากลับลง localStorage
+    localStorage.setItem("siteViews", views);
+
+    // แสดงผล
+    document.querySelector(".view-counter").textContent = "👁️ " + views + " เข้าชม";
+    </script>
+  
 
   <script src="script.js"></script>
 </body>
