@@ -1,14 +1,25 @@
+/* ตัวเล่นเพลง */
 .player {
     display: flex;
     align-items: center;
-    background-color: #ffffff;
+    justify-content: center; /* จัดเนื้อหาแนวนอนตรงกลางภายในกล่อง */
+    background-color: rgba(255, 255, 255, 0.3); /* โปร่งแสง */
+    backdrop-filter: blur(10px); /* เพิ่มความเบลอพื้นหลังให้สวย */
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 10px;
     max-width: 350px;
     font-family: Arial, sans-serif;
+
+    /* จัดให้อยู่กลางหน้าจอ */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
 }
 
+/* ปกเพลง */
 .cover {
     position: relative;
     width: 60px;
@@ -21,6 +32,7 @@
     cursor: pointer;
 }
 
+/* เอฟเฟกต์เมื่อ hover */
 .cover::after, .playBtn {
     opacity: 0; 
     transition: opacity 0.3s ease;
@@ -41,6 +53,7 @@
     z-index: 1;
 }
 
+/* ปุ่มเล่นเพลง */
 .playBtn {
     position: absolute;
     top: 50%;
@@ -54,6 +67,7 @@
     z-index: 2;
 }
 
+/* ข้อมูลเพลง */
 .song-info {
     flex-grow: 1;
     display: flex;
@@ -68,6 +82,7 @@
     margin-bottom: 6px;
 }
 
+/* แถบความคืบหน้า */
 .progress-container {
     width: 100%;
     height: 3px;
@@ -96,10 +111,9 @@
     width: 0%;
 }
 
+/* เวลาเพลง */
 .time {
     font-size: 0.75em;
     color: #666;
     margin-top: 8px;
 }
-
-
