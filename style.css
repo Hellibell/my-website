@@ -36,8 +36,8 @@ body {
   left: 10px;
   background: rgba(30, 30, 60, 0.6);
   color: white;
-  padding: 5px 10px;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 20px;
   font-size: 14px;
   backdrop-filter: blur(10px);
 }
