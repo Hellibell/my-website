@@ -54,18 +54,15 @@ body {
   border: none;           /* ลบขอบถ้ามี */
 }
 
-/* CSS เฉพาะสำหรับรายงานงาน */
 .my-report {
-    background-color: #f9f9f9; /* พื้นหลังอ่อน ๆ */
-    padding: 20px;             /* ระยะขอบด้านใน */
-    border-radius: 10px;       /* มุมโค้ง */
-    font-family: Arial, sans-serif; /* ฟอนต์เฉพาะส่วนนี้ */
-    color: #333;               /* สีข้อความ */
-    line-height: 1.6;          /* ระยะห่างบรรทัด */
-}
+    background: rgba(255, 255, 255, 0.6); /* พื้นหลังสีขาวโปร่ง 60% */
+    padding: 20px;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
 
-/* กำหนดขนาดหัวข้อเฉพาะสำหรับรายงาน */
-.my-report h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
+    /* ทำให้เบลอฉากหลังถ้ามี */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
