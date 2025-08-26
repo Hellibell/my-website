@@ -65,8 +65,8 @@ body {
     /* ทำให้เบลอฉากหลังถ้ามี */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-  .my-report p {
+  
     white-space: pre-line; /* อ่าน Enter ใน <p> เป็นบรรทัดใหม่ */
-  }
+  
   
 }
