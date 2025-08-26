@@ -11,7 +11,7 @@ if (!localStorage.getItem("visited")) {
 // ดึงค่าผู้เข้าชม
 let views = localStorage.getItem("siteViews") || 1;
 
-// แสดงผลใน view-counter พร้อมใส่รูป eye.png แทน emoji
+// แสดงผลใน view-counter 
 document.querySelector(".view-counter").innerHTML =
   '<img src="assets/Photo/eye.png" alt="eye" width="16" height="16" style="vertical-align:middle;"> ' 
-  + views + " เข้าชม";
+  + views + " ";
