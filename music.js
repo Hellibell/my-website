@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', function () {
         var time = block.querySelector('.time');
         var isDragging = false;
 
-        // ให้เพลงเล่นทันที
-        audioPlayer.play().catch(err => {
-            console.log('Autoplay ถูกบล็อก:', err);
-        });
-        playBtn.innerHTML = '&#10074;&#10074;'; // เปลี่ยนปุ่มเป็น pause
+        // ถ้าต้องการ autoplay ให้ uncomment
+        // audioPlayer.play().catch(err => {
+        //     console.log('Autoplay ถูกบล็อก:', err);
+        // });
+        // playBtn.innerHTML = '&#10074;&#10074;';
 
         playBtn.addEventListener('click', function () {
             togglePlayPause();
