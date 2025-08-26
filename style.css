@@ -4,6 +4,9 @@ body {
   color: white;
   text-align: center;
 }
+.a {
+  text-decoration: none;
+}
 
 .background {
   background: url("https://cdn.discordapp.com/attachments/1233881531404124202/1402117022396973147/IMG_8686.jpg?ex=68ac73fc&is=68ab227c&hm=5b3a652e227e5b47898c9c375a254ae2c5d368ccb6aabaa57cc286b87855167a&") no-repeat center center;
