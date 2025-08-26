@@ -53,3 +53,19 @@ body {
   vertical-align: middle; /* จัดให้อยู่กลางแนวเส้นบรรทัด */
   border: none;           /* ลบขอบถ้ามี */
 }
+
+/* CSS เฉพาะสำหรับรายงานงาน */
+.my-report {
+    background-color: #f9f9f9; /* พื้นหลังอ่อน ๆ */
+    padding: 20px;             /* ระยะขอบด้านใน */
+    border-radius: 10px;       /* มุมโค้ง */
+    font-family: Arial, sans-serif; /* ฟอนต์เฉพาะส่วนนี้ */
+    color: #333;               /* สีข้อความ */
+    line-height: 1.6;          /* ระยะห่างบรรทัด */
+}
+
+/* กำหนดขนาดหัวข้อเฉพาะสำหรับรายงาน */
+.my-report h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
