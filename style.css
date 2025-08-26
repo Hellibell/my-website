@@ -1,3 +1,18 @@
+@font-face {
+  src: url("https://mdn.github.io/shared-assets/fonts/variable-fonts/AmstelvarAlpha-VF.ttf");
+  font-family: "AmstelvarAlpha";
+  font-style: normal;
+}
+
+.sample {
+  font:
+    2rem "AmstelvarAlpha",
+    sans-serif;
+  /* font-variation-settings: "slnt" 12; */
+  font-style: oblique 23deg;
+}
+
+
 overlay {
     position: fixed;
     top: 0;
