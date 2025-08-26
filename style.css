@@ -27,6 +27,7 @@ body {
   margin: 50px auto;
   width: 300px;
   backdrop-filter: blur(10px);
+  position: relative;
 }
 
 .view-counter {
