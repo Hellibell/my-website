@@ -61,7 +61,7 @@ body {
     font-family: Arial, sans-serif;
     color: #fff;
     line-height: 1.6;
-    white-space: pre-line;
+    
 
     /* ทำให้เบลอฉากหลังถ้ามี */
     backdrop-filter: blur(10px);
