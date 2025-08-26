@@ -1,3 +1,15 @@
+const overlay = document.getElementById('overlay');
+const audioDiv = document.querySelector('div[music]');
+const audioFile = audioDiv.getAttribute('File');
+const audio = new Audio(audioFile);
+
+overlay.addEventListener('click', () => {
+    audio.play();       // เริ่มเพลง
+    overlay.style.display = 'none';  // ซ่อน overlay
+});
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     var musicBlocks = document.querySelectorAll('div[music]');
 
