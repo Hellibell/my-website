@@ -61,11 +61,14 @@ body {
     font-family: Arial, sans-serif;
     color: #fff;
     line-height: 1.6;
-    
-
-    /* ทำให้เบลอฉากหลังถ้ามี */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  
-  
 }
+
+/* ปรับลิสต์ให้เลขชิดข้อความ */
+.my-report ol {
+    padding-left: 20px; /* เลขเริ่มชิดข้อความมากขึ้น */
+}
+
+.my-report li {
+    margin-bottom: 5px; /* ลดระยะห่างแต่ละข้อ */
+}
+
