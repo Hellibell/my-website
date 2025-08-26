@@ -38,8 +38,6 @@ body {
   color: white;
   padding: 20px;
   border-radius: 20px;
-  margin: 50px auto;
-  width: 300px;
   font-size: 14px;
   backdrop-filter: blur(10px);
 }
