@@ -44,14 +44,12 @@ body {
   opacity: 0.8;
 }
 
-.socials a img {
-  width: 32px;
-  height: 32px;
-  margin: 0 10px;
-  border-radius: 8px;
-  transition: transform 0.2s;
+.social-links a {
+  text-decoration: none; /* ลบเส้นใต้ */
+  display: inline-block; /* ให้จัดเรียงไอคอนได้ง่าย */
 }
 
-.social-links a:hover {
-  color: #ff66cc;
+.social-links a img {
+  vertical-align: middle; /* จัดให้อยู่กลางแนวเส้นบรรทัด */
+  border: none;           /* ลบขอบถ้ามี */
 }
