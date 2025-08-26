@@ -2,9 +2,9 @@
 .player {
     display: flex;
     align-items: center;
-    justify-content: center; /* จัดเนื้อหาแนวนอนตรงกลางภายในกล่อง */
-    background-color: rgba(255, 255, 255, 0.3); /* โปร่งแสง */
-    backdrop-filter: blur(10px); /* เพิ่มความเบลอพื้นหลังให้สวย */
+    justify-content: center;
+    background: rgba(30, 30, 60, 0.6); /* พื้นหลังโปร่งแสงเข้ม */
+    backdrop-filter: blur(10px); /* เบลอพื้นหลัง */
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 10px;
@@ -78,7 +78,7 @@
 .song-title {
     font-size: 0.9em;
     font-weight: 600;
-    color: #333;
+    color: #fff; /* เปลี่ยนเป็นขาวให้เห็นบนพื้นหลังเข้ม */
     margin-bottom: 6px;
 }
 
@@ -114,6 +114,6 @@
 /* เวลาเพลง */
 .time {
     font-size: 0.75em;
-    color: #666;
+    color: #ccc; /* เปลี่ยนเป็นสีอ่อนให้มองเห็นบนพื้นหลังเข้ม */
     margin-top: 8px;
 }
