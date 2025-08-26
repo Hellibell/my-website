@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ไม่รู้</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .card {
+      background: rgba(30, 30, 60, 0.6);
+      padding: 20px;
+      border-radius: 20px;
+      margin: 50px auto;
+      width: 300px;
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .view-counter {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
   <!-- พื้นหลัง -->
@@ -13,61 +35,55 @@
   <!-- กล่องโปรไฟล์ -->
   <div class="card">
     <div class="view-counter">👁️ 0 เข้าชม</div>
+
     <img src="assets/Photo/avatar.gif" class="avatar" alt="avatar">
     <div class="stars">⭐⭐⭐⭐⭐</div>
-    <p class="location"><img src="assets/Photo/butterfly.gif" alt="butterfly" width="20" height="20" style="vertical-align:middle;margin-right:6px;">Thailand</p>
-
+    <p class="location">
+      <img src="assets/Photo/butterfly.gif" alt="butterfly" width="20" height="20" style="vertical-align:middle;margin-right:6px;">
+      Thailand
+    </p>
 
     <!-- Social icons -->
     <div class="social-links">
       <a href="https://www.facebook.com/Teerasank.29" target="_blank">
-  <img src="assets/Photo/FB.png" 
-       alt="Facebook" width="32" height="32">
+        <img src="assets/Photo/FB.png" alt="Facebook" width="32" height="32">
       </a>
       
       <a href="https://www.instagram.com/bx.best_29" target="_blank">
-  <img src="assets/Photo/Ig.png" 
-       alt="Instagram" width="32" height="32">
-</a>
+        <img src="assets/Photo/Ig.png" alt="Instagram" width="32" height="32">
+      </a>
 
-<a href="https://discordapp.com/users/slaxxx._" target="_blank">
-  <img src="assets/Photo/D.png" 
-       alt="Discord" width="32" height="32">
-</a>
+      <a href="https://discordapp.com/users/slaxxx._" target="_blank">
+        <img src="assets/Photo/D.png" alt="Discord" width="32" height="32">
+      </a>
 
-<a href="https://open.spotify.com/user/31nsj3elpr6vcj5sbkfsm5tapx3q?si=YoddxcLRRUuIEGyfTwkwJA" target="_blank">
-  <img src="assets/Photo/S.png" 
-       alt="Spotify" width="32" height="32">
-</a>
+      <a href="https://open.spotify.com/user/31nsj3elpr6vcj5sbkfsm5tapx3q?si=YoddxcLRRUuIEGyfTwkwJA" target="_blank">
+        <img src="assets/Photo/S.png" alt="Spotify" width="32" height="32">
+      </a>
 
-<a href="https://www.roblox.com/users/2711175922/profile" target="_blank">
-  <img src="assets/Photo/R.png" 
-       alt="Roblox" width="32" height="32">
-</a>
-      
-      
+      <a href="https://www.roblox.com/users/2711175922/profile" target="_blank">
+        <img src="assets/Photo/R.png" alt="Roblox" width="32" height="32">
+      </a>
     </div>
   </div>
 
-  
-    <!-- ส่วนรายงานงาน -->
-<div class="my-report">
+  <!-- ส่วนรายงาน -->
+  <div class="my-report">
     <h2></h2>
+  </div>
 
-    <script>
-    // ดึงค่าที่เคยเก็บไว้ ถ้ายังไม่มีให้เริ่มจาก 0
-    let views = localStorage.getItem("siteViews") || 0;
+  <script>
+    // ตรวจสอบว่าเคยเข้ามาแล้วหรือยัง
+    if (!localStorage.getItem("visited")) {
+      // ถ้ายังไม่เคยเข้ามา -> นับเป็น 1
+      localStorage.setItem("visited", "true");
+      localStorage.setItem("siteViews", 1);
+    }
 
-    // แปลงเป็นตัวเลขแล้ว +1
-    views = parseInt(views) + 1;
-
-    // เก็บค่ากลับลง localStorage
-    localStorage.setItem("siteViews", views);
-
-    // แสดงผล
+    // ดึงค่ามาแสดง
+    let views = localStorage.getItem("siteViews") || 1;
     document.querySelector(".view-counter").textContent = "👁️ " + views + " เข้าชม";
-    </script>
-  
+  </script>
 
   <script src="script.js"></script>
 </body>
