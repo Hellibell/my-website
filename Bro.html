@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>สุ่มรูป Rule34 (Demo)</title>
+  <title>สุ่มรูป Rule34</title>
   <style>
     body {
       background: #111;
@@ -53,43 +53,45 @@
     </div>
     <button onclick="getRandomImage()">สุ่มรูปใหม่</button>
   </div>
-<script>
-const randomTags = [
-  "anime", "hentai", "girl", "cat_girl", "elf", 
-  "fox_girl", "maid", "school_girl", "nurse", "dragon_girl"
-];
 
-async function getRandomImage() {
-  const tag = randomTags[Math.floor(Math.random() * randomTags.length)];
-  const url = `https://api.allorigins.win/get?url=${encodeURIComponent(
-    `https://rule34.xxx/index.php?page=dapi&s=post&q=index&tags=${tag}&limit=50&pid=0`
-  )}`;
+  <script>
+    const randomTags = [
+      "ass", "breasts", "thighhighs", "cowgirl", "elf", 
+      "maid", "cat_girl", "nurse", "schoolgirl", "hentai"
+    ];
 
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    const text = data.contents;
+    async function getRandomImage() {
+      const tag = randomTags[Math.floor(Math.random() * randomTags.length)];
+      const apiUrl = `https://rule34.xxx/index.php?page=dapi&s=post&q=index&tags=${tag}&limit=100&pid=0`;
+      const url = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
-    // ดึงค่า file_url จาก XML
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(text, "application/xml");
-    const posts = xml.querySelectorAll("post");
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const text = data.contents;
 
-    if (posts.length > 0) {
-      const post = posts[Math.floor(Math.random() * posts.length)];
-      const imageUrl = post.getAttribute("file_url");
-      document.getElementById("randomImage").src = imageUrl;
-    } else {
-      alert("ไม่พบรูปสำหรับแท็กนี้");
+        // ดึงค่า file_url จาก XML
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, "application/xml");
+        const posts = xml.querySelectorAll("post");
+
+        if (posts.length > 0) {
+          const post = posts[Math.floor(Math.random() * posts.length)];
+          const imageUrl = post.getAttribute("file_url");
+          document.getElementById("randomImage").src = imageUrl;
+          console.log("✅ โหลดรูปสำเร็จ:", imageUrl);
+        } else {
+          document.getElementById("randomImage").src = "";
+          alert("❌ ไม่พบรูป (API ไม่ส่งโพสต์กลับมา)");
+        }
+      } catch (err) {
+        console.error("เกิดข้อผิดพลาด:", err);
+        alert("⚠ โหลดรูปไม่สำเร็จ (API error)");
+      }
     }
-  } catch (err) {
-    console.error("เกิดข้อผิดพลาด:", err);
-  }
-}
 
-// โหลดครั้งแรก
-getRandomImage();
-</script>
-  
+    // โหลดครั้งแรก
+    getRandomImage();
+  </script>
 </body>
 </html>
