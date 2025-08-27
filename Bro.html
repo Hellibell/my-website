@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สุ่มรูป Rule34 (Demo)</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .container {
+      margin-top: 30px;
+    }
+    .image-box {
+      width: 400px;
+      height: 400px;
+      margin: 20px auto;
+      border: 3px solid #3EFF00;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #222;
+    }
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    button {
+      padding: 10px 20px;
+      background: #3EFF00;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #2ECC00;
+    }
+  </style>
+</head>
+<body>
+  <h1>สุ่มรูป Rule34</h1>
+  <div class="container">
+    <div class="image-box">
+      <img id="randomImage" src="" alt="สุ่มรูปจะแสดงที่นี่">
+    </div>
+    <button onclick="getRandomImage()">สุ่มรูปใหม่</button>
+  </div>
+
+  <script>
+    const randomTags = [
+      "anime", "hentai", "girl", "cat_girl", "elf", 
+      "fox_girl", "maid", "school_girl", "nurse", "dragon_girl"
+    ];
+
+    async function getRandomImage() {
+      const tag = randomTags[Math.floor(Math.random() * randomTags.length)];
+      const url = `https://rule34.xxx/index.php?page=dapi&s=post&q=index&tags=${tag}&limit=1&pid=0`;
+
+      try {
+        const response = await fetch(url);
+        const text = await response.text();
+
+        // ดึงค่า file_url จาก XML
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, "application/xml");
+        const post = xml.querySelector("post");
+
+        if (post) {
+          const imageUrl = post.getAttribute("file_url");
+          document.getElementById("randomImage").src = imageUrl;
+        } else {
+          alert("ไม่พบรูปสำหรับแท็กนี้");
+        }
+      } catch (err) {
+        console.error("เกิดข้อผิดพลาด:", err);
+      }
+    }
+
+    // โหลดครั้งแรก
+    getRandomImage();
+  </script>
+</body>
+</html>
