@@ -3,26 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JPG → PNG Converter</title>
+<title>JPG → PNG โปร่งใส</title>
 <style>
-  body { font-family: sans-serif; text-align: center; margin: 50px; }
-  canvas { display: none; }
-  img { max-width: 300px; margin-top: 20px; }
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+  display: flex; justify-content: center; padding: 40px;
+  background: #0f172a; color: #e6eef8;
+}
+.card {
+  background: #0b1220; padding: 20px; border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.6); width: 360px;
+}
+input, textarea {
+  width: 100%; padding: 10px; margin: 8px 0;
+  border-radius: 8px; border: 1px solid #213047;
+  background: #071022; color: inherit;
+}
+button {
+  padding: 10px 14px; border-radius: 8px; border: 0;
+  background: #7c3aed; color: white; cursor: pointer;
+}
+button.gray { background:#334155 }
+.qr-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:8px }
+img { max-width: 300px; border:1px solid #213047; border-radius: 8px; }
 </style>
 </head>
 <body>
-<h1>แปลง JPG เป็น PNG</h1>
+<div class="card">
+<h2 style="text-align:center;">แปลง JPG → PNG โปร่งใส</h2>
 
 <input type="file" id="fileInput" accept="image/jpeg">
-<br><br>
-<button id="convertBtn">แปลงเป็น PNG</button>
+<button id="convertBtn">แปลงและลบพื้นหลัง</button>
 
-<br><br>
-<a id="downloadLink" style="display:none;">ดาวน์โหลด PNG</a>
-<br>
-<img id="preview">
+<div class="qr-wrap">
+  <a id="downloadLink" style="display:none;">ดาวน์โหลด PNG</a>
+  <img id="preview">
+</div>
 
-<canvas id="canvas"></canvas>
+<canvas id="canvas" style="display:none;"></canvas>
+</div>
 
 <script>
 const fileInput = document.getElementById('fileInput');
@@ -37,25 +56,34 @@ convertBtn.addEventListener('click', () => {
     alert('กรุณาเลือกไฟล์ JPG ก่อน');
     return;
   }
+
   const img = new Image();
   img.onload = () => {
     canvas.width = img.width;
     canvas.height = img.height;
     const ctx = canvas.getContext('2d');
 
-    // วาดภาพลง canvas
     ctx.drawImage(img, 0, 0);
 
-    // แปลงเป็น PNG
-    const pngData = canvas.toDataURL('image/png');
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
 
-    // แสดงตัวอย่างและลิงก์ดาวน์โหลด
+    // ลบพื้นหลังสีขาว/เทาให้โปร่งใส
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i], g = data[i + 1], b = data[i + 2];
+      if (r > 200 && g > 200 && b > 200) { data[i + 3] = 0; }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+
+    const pngData = canvas.toDataURL('image/png');
     preview.src = pngData;
     downloadLink.href = pngData;
     downloadLink.download = 'converted.png';
     downloadLink.style.display = 'inline';
     downloadLink.textContent = 'ดาวน์โหลด PNG';
   };
+
   img.src = URL.createObjectURL(file);
 });
 </script>
