@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QR Generator</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto;display:flex;gap:20px;
+      align-items:flex-start;justify-content:center;padding:40px;background:#0f172a;color:#e6eef8}
+    .card{background:#0b1220;padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.6);width:360px}
+    input,textarea,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #213047;background:#071022;color:inherit}
+    button{padding:10px 14px;border-radius:8px;border:0;background:#7c3aed;color:white;cursor:pointer}
+    .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:8px}
+  </style>
+  <!-- QRious (เล็ก ใช้งานง่าย) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h2>QR Generator</h2>
+
+    <label>ข้อความ/URL</label>
+    <textarea id="text" rows="3" placeholder="ใส่ URL หรือข้อความที่ต้องการ"></textarea>
+
+    <label>ขนาด (px)</label>
+    <input id="size" type="number" value="256" min="64" max="1024">
+
+    <label>สีพื้นหน้า (foreground)</label>
+    <input id="fg" type="color" value="#000000">
+
+    <label>สีพื้นหลัง (background)</label>
+    <input id="bg" type="color" value="#ffffff">
+
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button id="build">สร้าง QR</button>
+      <button id="download">ดาวน์โหลด PNG</button>
+      <button id="clear" style="background:#334155">ลบ</button>
+    </div>
+
+    <div class="qr-wrap">
+      <canvas id="qr-canvas" width="256" height="256" style="background:transparent;border-radius:8px"></canvas>
+      <small id="hint" style="opacity:.8">ผลลัพธ์จะขึ้นที่นี่</small>
+    </div>
+  </div>
+
+  <script>
+    const textEl = document.getElementById('text');
+    const sizeEl = document.getElementById('size');
+    const fgEl = document.getElementById('fg');
+    const bgEl = document.getElementById('bg');
+    const btnBuild = document.getElementById('build');
+    const btnDownload = document.getElementById('download');
+    const btnClear = document.getElementById('clear');
+    const canvas = document.getElementById('qr-canvas');
+
+    // สร้าง QR ด้วย QRious ที่วาดลง canvas
+    function buildQR() {
+      const value = textEl.value.trim();
+      if (!value) {
+        alert('ใส่ข้อความหรือ URL ก่อนครับ');
+        return;
+      }
+      const size = Math.max(64, Math.min(1024, parseInt(sizeEl.value) || 256));
+      canvas.width = canvas.height = size;
+
+      // สร้าง QR บน element <canvas>
+      const qr = new QRious({
+        element: canvas,
+        value: value,
+        size: size,
+        level: 'H', // ระดับการแก้ไขข้อผิดพลาด (L,M,Q,H)
+        foreground: fgEl.value,
+        background: bgEl.value
+      });
+
+      document.getElementById('hint').textContent = 'QR สร้างแล้ว — ดาวน์โหลดได้เลย';
+    }
+
+    // ดาวน์โหลด canvas เป็น PNG
+    function downloadPNG() {
+      const value = textEl.value.trim();
+      if (!value) { alert('ใส่ข้อความหรือ URL ก่อนครับ'); return; }
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'qr.png';
+      a.click();
+    }
+
+    btnBuild.addEventListener('click', buildQR);
+    btnDownload.addEventListener('click', downloadPNG);
+    btnClear.addEventListener('click', () => {
+      textEl.value = '';
+      document.getElementById('hint').textContent = 'ผลลัพธ์จะขึ้นที่นี่';
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    });
+
+    // สร้างอัตโนมัติเมื่อโหลดถ้ามีค่าพร้อม
+    window.addEventListener('load', () => {
+      // ถ้ามี text ใน query string ?q=... จะเติมให้อัตโนมัติ
+      const qp = new URLSearchParams(location.search).get('q');
+      if (qp) { textEl.value = qp; buildQR(); }
+    });
+  </script>
+</body>
+</html>
