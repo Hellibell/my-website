@@ -95,12 +95,12 @@
         return;
     }
 
-    // เอาเฉพาะตัวอักษรที่ปลอดภัยในชื่อไฟล์
+    // แทนตัวอักษรที่ใช้ไม่ได้ในชื่อไฟล์ด้วย _
     let safeName = value.replace(/[\/\\:*?"<>|]/g, '_');
 
     const a = document.createElement('a');
     a.href = canvas.toDataURL('image/png');
-    a.download = safeName + '.png';
+    a.download = 'QR-' + safeName + '.png';
     a.click();
 }
 
