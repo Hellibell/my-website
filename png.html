@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JPG → PNG Converter</title>
+<style>
+  body { font-family: sans-serif; text-align: center; margin: 50px; }
+  canvas { display: none; }
+  img { max-width: 300px; margin-top: 20px; }
+</style>
+</head>
+<body>
+<h1>แปลง JPG เป็น PNG</h1>
+
+<input type="file" id="fileInput" accept="image/jpeg">
+<br><br>
+<button id="convertBtn">แปลงเป็น PNG</button>
+
+<br><br>
+<a id="downloadLink" style="display:none;">ดาวน์โหลด PNG</a>
+<br>
+<img id="preview">
+
+<canvas id="canvas"></canvas>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const convertBtn = document.getElementById('convertBtn');
+const canvas = document.getElementById('canvas');
+const downloadLink = document.getElementById('downloadLink');
+const preview = document.getElementById('preview');
+
+convertBtn.addEventListener('click', () => {
+  const file = fileInput.files[0];
+  if (!file) {
+    alert('กรุณาเลือกไฟล์ JPG ก่อน');
+    return;
+  }
+  const img = new Image();
+  img.onload = () => {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+
+    // วาดภาพลง canvas
+    ctx.drawImage(img, 0, 0);
+
+    // แปลงเป็น PNG
+    const pngData = canvas.toDataURL('image/png');
+
+    // แสดงตัวอย่างและลิงก์ดาวน์โหลด
+    preview.src = pngData;
+    downloadLink.href = pngData;
+    downloadLink.download = 'converted.png';
+    downloadLink.style.display = 'inline';
+    downloadLink.textContent = 'ดาวน์โหลด PNG';
+  };
+  img.src = URL.createObjectURL(file);
+});
+</script>
+</body>
+</html>
