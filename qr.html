@@ -1,116 +1,134 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QR Generator</title>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto;
-      display: flex; justify-content: center; padding: 40px;
-      background: #0f172a; color: #e6eef8;
-    }
-    .card {
-      background: #0b1220; padding: 20px; border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.6); width: 360px;
-    }
-    input, textarea {
-      width: 100%; padding: 10px; margin: 8px 0;
-      border-radius: 8px; border: 1px solid #213047;
-      background: #071022; color: inherit;
-    }
-    button {
-      padding: 10px 14px; border-radius: 8px; border: 0;
-      background: #7c3aed; color: white; cursor: pointer;
-    }
-    button.gray { background:#334155 }
-    .qr-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:8px }
-  </style>
-  <!-- โหลดไลบรารี QRious -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QR Generator</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto;
+      display: flex; justify-content: center; padding: 40px;
+      background: #0f172a; color: #e6eef8;
+    }
+    .card {
+      background: #0b1220; padding: 20px; border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.6); width: 360px;
+    }
+    input, textarea {
+      width: 100%; padding: 10px; margin: 8px 0;
+      border-radius: 8px; border: 1px solid #213047;
+      background: #071022; color: inherit;
+    }
+    button {
+      padding: 10px 14px; border-radius: 8px; border: 0;
+      background: #7c3aed; color: white; cursor: pointer;
+    }
+    button.gray { background:#334155 }
+    .qr-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:8px }
+  </style>
+  <!-- โหลดไลบรารี QRious -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 </head>
 <body>
-  <div class="card">
-    <h2>QR Generator</h2>
+  <div class="card">
+    <h2>QR Generator</h2>
 
-    <label>ข้อความ/URL</label>
-    <textarea id="text" rows="3" placeholder="ใส่ URL หรือข้อความที่ต้องการ"></textarea>
+    <label>ข้อความ/URL</label>
+    <textarea id="text" rows="3" placeholder="ใส่ URL หรือข้อความที่ต้องการ"></textarea>
 
-    <label>ขนาด (px)</label>
-    <input id="size" type="number" value="256" min="64" max="1024">
+    <label>ขนาด (px)</label>
+    <input id="size" type="number" value="256" min="64" max="1024">
 
-    <label>สีพื้นหน้า (foreground)</label>
-    <input id="fg" type="color" value="#000000">
+    <label>สีพื้นหน้า (foreground)</label>
+    <input id="fg" type="color" value="#000000">
 
-    <label>สีพื้นหลัง (background)</label>
-    <input id="bg" type="color" value="#ffffff">
+    <label>สีพื้นหลัง (background)</label>
+    <input id="bg" type="color" value="#ffffff">
 
-    <div style="display:flex;gap:8px;margin-top:8px;">
-      <button id="build">สร้าง QR</button>
-      <button id="download">ดาวน์โหลด PNG</button>
-      <button id="clear" class="gray">ลบ</button>
-    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button id="build">สร้าง QR</button>
+      <button id="download">ดาวน์โหลด PNG</button>
+      <button id="clear" class="gray">ลบ</button>
+    </div>
 
-    <div class="qr-wrap">
-      <canvas id="qr-canvas" width="256" height="256" style="background:transparent;border-radius:8px"></canvas>
-      <small id="hint" style="opacity:.8">ผลลัพธ์จะขึ้นที่นี่</small>
-    </div>
-  </div>
+    <div class="qr-wrap">
+      <canvas id="qr-canvas" width="256" height="256" style="background:transparent;border-radius:8px"></canvas>
+      <small id="hint" style="opacity:.8">ผลลัพธ์จะขึ้นที่นี่</small>
+    </div>
+  </div>
 
-  <script>
-    const textEl = document.getElementById('text');
-    const sizeEl = document.getElementById('size');
-    const fgEl = document.getElementById('fg');
-    const bgEl = document.getElementById('bg');
-    const btnBuild = document.getElementById('build');
-    const btnDownload = document.getElementById('download');
-    const btnClear = document.getElementById('clear');
-    const canvas = document.getElementById('qr-canvas');
+  <script>
+    const textEl = document.getElementById('text');
+    const sizeEl = document.getElementById('size');
+    const fgEl = document.getElementById('fg');
+    const bgEl = document.getElementById('bg');
+    const btnBuild = document.getElementById('build');
+    const btnDownload = document.getElementById('download');
+    const btnClear = document.getElementById('clear');
+    const canvas = document.getElementById('qr-canvas');
 
-    function buildQR() {
-      let value = textEl.value.trim(); // ตัดช่องว่างหัวท้าย
-      if (!value) {
-        alert('ใส่ข้อความหรือ URL ก่อนครับ');
-        return;
-      }
-      const size = Math.max(128, Math.min(1024, parseInt(sizeEl.value) || 256));
-      canvas.width = canvas.height = size;
+    function buildQR() {
+      let value = textEl.value.trim();
+      if (!value) { alert('ใส่ข้อความหรือ URL ก่อนครับ'); return; }
 
-      new QRious({
-        element: canvas,
-        value: value,
-        size: size,
-        level: 'H', // ปรับให้ทน error
-        foreground: fgEl.value || '#000000',
-        background: bgEl.value || '#ffffff'
-      });
+      const size = Math.max(128, Math.min(1024, parseInt(sizeEl.value) || 256));
+      canvas.width = canvas.height = size;
 
-      document.getElementById('hint').textContent = 'QR สร้างแล้ว — ลองสแกนดูครับ';
-    }
+      new QRious({
+        element: canvas,
+        value: value,
+        size: size,
+        level: 'H',
+        foreground: fgEl.value || '#000000',
+        background: bgEl.value || '#ffffff'
+      });
 
-    function downloadPNG() {
-      let value = textEl.value.trim();
-      if (!value) { alert('ใส่ข้อความหรือ URL ก่อนครับ'); return; }
-      const a = document.createElement('a');
-      a.href = canvas.toDataURL('image/png');
-      a.download = 'qr.png';
-      a.click();
-    }
+      document.getElementById('hint').textContent = 'QR สร้างแล้ว — ลองสแกนดูครับ';
+    }
 
-    btnBuild.addEventListener('click', buildQR);
-    btnDownload.addEventListener('click', downloadPNG);
-    btnClear.addEventListener('click', () => {
-      textEl.value = '';
-      document.getElementById('hint').textContent = 'ผลลัพธ์จะขึ้นที่นี่';
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-    });
+    function downloadPNG() {
+      let value = textEl.value.trim();
+      if (!value) { alert('ใส่ข้อความหรือ URL ก่อนครับ'); return; }
 
-    // สร้างอัตโนมัติถ้าเจอ query string ?q=...
-    window.addEventListener('load', () => {
-      const qp = new URLSearchParams(location.search).get('q');
-      if (qp) { textEl.value = qp; buildQR(); }
-    });
-  </script>
+      let filename = 'qr';
+      const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/i;
+
+      if (urlPattern.test(value)) {
+        try {
+          const url = new URL(value);
+          filename = url.hostname
+            .replace(/^www\./, '')
+            .replace(/\.(com|net|org|co|io|info|xyz)$/i, '')
+            .replace(/\./g, '_');
+        } catch {
+          filename = 'qr';
+        }
+      } else {
+        filename = value.substring(0, 20)
+                    .replace(/\s+/g, '_')
+                    .replace(/\./g,'_');
+      }
+
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'QR ' + filename + '.png';
+      a.click();
+    }
+
+    btnBuild.addEventListener('click', buildQR);
+    btnDownload.addEventListener('click', downloadPNG);
+    btnClear.addEventListener('click', () => {
+      textEl.value = '';
+      document.getElementById('hint').textContent = 'ผลลัพธ์จะขึ้นที่นี่';
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    });
+
+    window.addEventListener('load', () => {
+      const qp = new URLSearchParams(location.search).get('q');
+      if (qp) { textEl.value = qp; buildQR(); }
+    });
+  </script>
+
 </body>
 </html>
