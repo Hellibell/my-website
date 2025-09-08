@@ -1,79 +1,109 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>สุ่มรูป</title>
-<style>
-body {
-  background: #111;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
-}
-.container { margin-top: 30px; }
-.image-box {
-  width: 400px; height: 400px;
-  margin: 20px auto;
-  border: 3px solid #3EFF00;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #222;
-}
-img { max-width: 100%; max-height: 100%; object-fit: contain; }
-button {
-  padding: 10px 20px; background: #3EFF00; border: none;
-  border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 15px;
-  margin-right: 10px;
-}
-button:hover { background: #2ECC00; }
-.error { color: red; font-weight: bold; margin-top: 10px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Img</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .container {
+      margin-top: 30px;
+    }
+    .image-box {
+      margin: 20px auto;
+      border: 3px solid #3EFF00;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #222;
+      transition: all 0.3s ease;
+      max-width: 90vw;  /* ปรับไม่ให้เกินหน้าจอ */
+      max-height: 80vh;
+    }
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    button {
+      padding: 10px 20px;
+      background: #3EFF00;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #2ECC00;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
-  <h1>สุ่มรูป</h1>
-  <div class="image-box">
-    <img id="randomImage" src="" alt="รูปสุ่ม">
+  <div class="container">
+    <h1>สุ่มรูป</h1>
+    <div class="image-box" id="imageBox">
+      <img id="randomImage" src="" alt="Random Image">
+    </div>
+    <button onclick="loadRandomImage()">สุ่มรูปใหม่</button>
+    <p class="error" id="errorMsg"></p>
   </div>
-  <div>
-    <button onclick="loadRandomImage()">สุ่ม NSFW</button>
-  </div>
-  <div id="errorMsg" class="error"></div>
-</div>
 
-<script>
-const nsfwTags = ["ass","hentai","milf","oral","paizuri","ecchi","ero"];
+  <script>
+    const nsfwTags = ["ass","hentai","milf","oral","paizuri","ecchi","ero"];
 
-async function loadRandomImage() {
-  const errorMsg = document.getElementById('errorMsg');
-  errorMsg.textContent = "";
+    async function loadRandomImage() {
+      const errorMsg = document.getElementById('errorMsg');
+      const imageBox = document.getElementById('imageBox');
+      const imgElement = document.getElementById('randomImage');
+      errorMsg.textContent = "";
 
-  // เลือกแท็กแบบสุ่ม
-  const randomTag = nsfwTags[Math.floor(Math.random() * nsfwTags.length)];
-  const apiURL = `https://api.waifu.im/search?included_tags=${randomTag}`;
+      const randomTag = nsfwTags[Math.floor(Math.random() * nsfwTags.length)];
+      const apiURL = `https://api.waifu.im/search?included_tags=${randomTag}`;
 
-  try {
-    const response = await fetch(apiURL);
-    if (!response.ok) throw new Error("ไม่สามารถโหลด API รูปได้");
+      try {
+        const response = await fetch(apiURL);
+        if (!response.ok) throw new Error("ไม่สามารถโหลด API รูปได้");
 
-    const data = await response.json();
-    if (data.images && data.images.length > 0) {
-      // ดึง URL ของรูปแรกมาแสดง
-      document.getElementById('randomImage').src = data.images[0].url;
-    } else {
-      throw new Error("ไม่พบรูปสำหรับแท็กนี้");
+        const data = await response.json();
+        if (data.images && data.images.length > 0) {
+          const imgUrl = data.images[0].url;
+
+          // preload รูปก่อนแสดง
+          const tempImg = new Image();
+          tempImg.src = imgUrl;
+          tempImg.onload = () => {
+            imgElement.src = imgUrl;
+
+            // ปรับขนาด container ตามขนาดจริงของรูป แต่ไม่เกิน max-width/max-height
+            const width = Math.min(tempImg.width, window.innerWidth * 0.9);
+            const height = Math.min(tempImg.height, window.innerHeight * 0.8);
+            imageBox.style.width = width + 'px';
+            imageBox.style.height = height + 'px';
+          };
+        } else {
+          throw new Error("ไม่พบรูปสำหรับแท็กนี้");
+        }
+      } catch (error) {
+        console.error(error);
+        errorMsg.textContent = "เกิดข้อผิดพลาดในการโหลดรูป!";
+      }
     }
-  } catch (error) {
-    console.error(error);
-    errorMsg.textContent = "เกิดข้อผิดพลาดในการโหลดรูป!";
-  }
-}
-</script>
 
+    // โหลดรูปแรกเมื่อเปิดเว็ปไซต์
+    window.addEventListener('DOMContentLoaded', loadRandomImage);
+  </script>
 </body>
 </html>
