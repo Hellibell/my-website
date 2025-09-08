@@ -76,7 +76,7 @@
 
       try {
         // ใช้ API ของ Rule34.xxx
-        const apiUrl = `https://rule34.xxx/index.php?page=dapi&s=post&q=index&tags=${tag}&limit=100`;
+        const apiUrl = `https://rule34.us/index.php?r=posts/index&q=${tag}&limit=100`;
         const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`);
         const text = await response.text();
         const parser = new DOMParser();
