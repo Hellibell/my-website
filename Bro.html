@@ -43,69 +43,72 @@
     button:hover {
       background: #2ECC00;
     }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>สุ่มรูป Rule34</h1>
   <div class="container">
     <div class="image-box" id="imageBox">
-      <span id="message">คลิกปุ่มเพื่อสุ่มรูป</span>
+      <span id="status">รูปจะแสดงที่นี่</span>
       <img id="randomImage" src="" alt="" style="display:none;">
     </div>
     <button onclick="getRandomImage()">สุ่มรูปใหม่</button>
   </div>
 
   <script>
-    const tags = ["anime", "hentai", "girl", "cat_girl", "elf", "fox_girl", "maid", "school_girl", "nurse", "dragon_girl"];
+    const randomTags = [
+      "anime", "hentai", "girl", "cat_girl", "elf", "fox_girl",
+      "maid", "school_girl", "nurse", "dragon_girl"
+    ];
 
     async function getRandomImage() {
-      const imageEl = document.getElementById('randomImage');
-      const messageEl = document.getElementById('message');
-      imageEl.style.display = "none";
-      messageEl.textContent = "กำลังโหลด...";
+      const tag = randomTags[Math.floor(Math.random() * randomTags.length)];
+      const imageBox = document.getElementById("imageBox");
+      const img = document.getElementById("randomImage");
+      const status = document.getElementById("status");
+
+      status.textContent = `กำลังโหลดแท็ก: ${tag}...`;
+      img.style.display = "none";
 
       try {
-        // เลือกแท็กแบบสุ่ม
-        const tag = tags[Math.floor(Math.random() * tags.length)];
-
-        // ใช้ proxy CORS เพื่อ fetch หน้า Rule34
-        const proxy = "https://api.allorigins.win/get?url=";
-        const url = encodeURIComponent(`https://rule34.us/index.php?r=posts/index&q=${tag}`);
-
-        const response = await fetch(proxy + url);
-        const data = await response.json();
-
-        // แปลง HTML เป็น DOM
+        // ใช้ API ของ Rule34.xxx
+        const apiUrl = `https://rule34.xxx/index.php?page=dapi&s=post&q=index&tags=${tag}&limit=100`;
+        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`);
+        const text = await response.text();
         const parser = new DOMParser();
-        const doc = parser.parseFromString(data.contents, "text/html");
+        const xmlDoc = parser.parseFromString(text, "text/xml");
+        const posts = xmlDoc.getElementsByTagName("post");
 
-        const thumbLinks = doc.querySelectorAll(".thumbail-container a");
-        if(thumbLinks.length === 0){
-          messageEl.textContent = "ไม่พบโพสต์สำหรับแท็ก: " + tag;
+        if (posts.length === 0) {
+          status.textContent = `ไม่พบรูปสำหรับแท็ก: ${tag}`;
           return;
         }
 
-        // เลือกลิงก์โพสต์แรกแบบสุ่ม
-        const postLink = thumbLinks[Math.floor(Math.random() * thumbLinks.length)].href;
+        // เลือกรูปแบบสุ่ม
+        const randomIndex = Math.floor(Math.random() * posts.length);
+        let imageUrl = posts[randomIndex].getAttribute("file_url");
 
-        const postResponse = await fetch(proxy + encodeURIComponent(postLink));
-        const postData = await postResponse.json();
-        const postDoc = parser.parseFromString(postData.contents, "text/html");
-        const imgElPost = postDoc.querySelector(".content_push img");
-
-        if(imgElPost && (imgElPost.src.endsWith(".png") || imgElPost.src.endsWith(".jpg") || imgElPost.src.endsWith(".jpeg"))){
-          imageEl.src = imgElPost.src;
-          imageEl.style.display = "block";
-          messageEl.textContent = "Tags: " + tag;
-        } else {
-          messageEl.textContent = "เกิดข้อผิดพลาด: ไม่พบรูปภาพ";
+        // แก้ปัญหา mixed content https
+        if (imageUrl.startsWith("http://")) {
+          imageUrl = imageUrl.replace("http://", "https://");
         }
 
-      } catch(err){
+        img.src = imageUrl;
+        img.style.display = "block";
+        status.textContent = `Tags: ${tag}`;
+      } catch (err) {
+        status.textContent = "เกิดข้อผิดพลาดในการโหลดรูป";
+        status.classList.add("error");
         console.error(err);
-        document.getElementById('message').textContent = "เกิดข้อผิดพลาด: " + err;
       }
     }
+
+    // โหลดรูปแรกเมื่อเปิดหน้า
+    getRandomImage();
   </script>
 </body>
 </html>
