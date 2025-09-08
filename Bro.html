@@ -61,8 +61,8 @@
 
   <script>
     const randomTags = [
-      "anime", "hentai", "girl", "cat_girl", "elf", "fox_girl",
-      "maid", "school_girl", "nurse", "dragon_girl"
+      "solo-leveling", "solo-leveling", "solo-leveling", "solo-leveling", "solo-leveling", "solo-leveling",
+      "solo-leveling", "solo-leveling", "solo-leveling", "solo-leveling"
     ];
 
     async function getRandomImage() {
@@ -76,7 +76,7 @@
 
       try {
         // ใช้ API ของ Rule34.xxx
-        const apiUrl = `https://rule34.us/index.php?r=posts/index&q=${tag}&limit=100`;
+        const apiUrl = `https://www.sakuhentai.net/${tag}&limit=100`;
         const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`);
         const text = await response.text();
         const parser = new DOMParser();
