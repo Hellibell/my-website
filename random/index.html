@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>สุ่มรูป</title>
+  <title>Random</title> <!-- แก้ title -->
   <style>
     body {
       background: #111;
@@ -39,6 +39,7 @@
       font-size: 16px;
       cursor: pointer;
       margin-top: 15px;
+      margin-right: 10px;
     }
     button:hover {
       background: #2ECC00;
@@ -46,32 +47,43 @@
     .error {
       color: red;
       font-weight: bold;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>สุ่มรูปจาก Nekos.life</h1>
+    <h1>สุ่มรูป</h1> <!-- แก้หัวข้อ -->
     <div class="image-box">
       <img id="randomImage" src="" alt="รูปสุ่ม">
     </div>
-    <button onclick="loadRandomImage()">สุ่มรูปใหม่</button>
+    <div>
+      <button onclick="loadRandomImage('safe')">สุ่มรูป Safe</button>
+      <button onclick="loadRandomImage('nsfw')">สุ่มรูป NSFW</button>
+    </div>
     <div id="errorMsg" class="error"></div>
   </div>
 
   <script>
-    const tags = [
-      'ngif', 'hug', 'gecg', 'pat', 'cuddle', 'meow', 'tickle', 'gasm',
-      'goose', 'lewd', 'v3', 'spank', 'feed', 'slap', 'wallpaper', 'neko',
-      'lizard', 'woof', 'fox_girl', '8ball', 'kiss', 'avatar', 'waifu', 'smug'
+    const safeTags = [
+      'ngif', 'hug', 'gecg', 'pat', 'cuddle', 'meow', 'tickle',
+      'goose', 'neko', 'lizard', 'woof', 'fox_girl', '8ball',
+      'kiss', 'avatar', 'waifu', 'smug', 'wallpaper', 'feed'
     ];
 
-    async function loadRandomImage() {
-      const randomTag = tags[Math.floor(Math.random() * tags.length)];
-      const apiURL = `https://nekos.life/api/v2/img/${randomTag}`;
+    const nsfwTags = ['lewd', 'gasm', 'spank'];
+
+    async function loadRandomImage(type) {
       const errorMsg = document.getElementById('errorMsg');
       errorMsg.textContent = ""; // ล้างข้อความผิดพลาดก่อน
+
+      let tagList;
+      if(type === 'nsfw') tagList = nsfwTags;
+      else tagList = safeTags;
+
+      const randomTag = tagList[Math.floor(Math.random() * tagList.length)];
+      const apiURL = `https://nekos.life/api/v2/img/${randomTag}`;
 
       try {
         const response = await fetch(apiURL);
@@ -84,8 +96,8 @@
       }
     }
 
-    // โหลดรูปครั้งแรกเมื่อเปิดหน้า
-    loadRandomImage();
+    // โหลด Safe รูปแรกเมื่อเปิดหน้า
+    loadRandomImage('safe');
   </script>
 
 </body>
