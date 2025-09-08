@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -47,6 +48,11 @@
       font-size: 14px;
       color: #ccc;
     }
+    #statusLine {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #ffbb00;
+    }
   </style>
 </head>
 <body>
@@ -57,6 +63,7 @@
     </div>
     <button onclick="getRandomImage()">สุ่มรูปใหม่</button>
     <p id="tag"></p>
+    <p id="statusLine"></p>
   </div>
 
   <script>
@@ -65,48 +72,63 @@
       "maid", "school_girl", "nurse", "dragon_girl"
     ];
 
+    // ใช้ proxy เพื่อแก้ CORS (ถ้าไม่อยากใช้ ให้เปลี่ยน PROXY = "" แต่จะ error ถ้าโดนบล็อก)
+    const PROXY = "https://api.allorigins.win/raw?url=";
+
     async function getRandomImage() {
+      const btn = document.querySelector("button");
+      const imgEl = document.getElementById("randomImage");
+      const tagEl = document.getElementById("tag");
+      const statusEl = document.getElementById("statusLine");
+
       try {
+        btn.disabled = true;
+        statusEl.innerText = "กำลังโหลด...";
+
         // สุ่มแท็ก
         const tags = randomTags[Math.floor(Math.random() * randomTags.length)];
-        document.getElementById("tag").innerText = "แท็กที่เลือก: " + tags;
+        tagEl.innerText = "แท็กที่เลือก: " + tags;
 
-        // ดึง API Rule34
+        // API
         const apiUrl = "https://rule34.xxx/index.php?page=dapi&s=post&q=index";
-        const params = new URLSearchParams({
-          tags: tags,
-          limit: "1",
-          pid: "0"
-        });
+        const params = new URLSearchParams({ tags, limit: "1", pid: "0" });
+        const fetchUrl = PROXY + encodeURIComponent(apiUrl + "&" + params.toString());
 
-        const response = await fetch(`${apiUrl}&${params.toString()}`);
-        const xmlText = await response.text();
+        const resp = await fetch(fetchUrl);
+        if (!resp.ok) {
+          throw new Error("HTTP " + resp.status);
+        }
+        const xmlText = await resp.text();
 
-        // แปลง XML → DOM
+        // แปลง XML
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "text/xml");
         const post = xmlDoc.querySelector("post");
 
         if (!post) {
-          document.getElementById("randomImage").src = "";
-          document.getElementById("randomImage").alt = "ไม่พบรูป";
+          imgEl.src = "";
+          imgEl.alt = "ไม่พบรูป";
+          statusEl.innerText = "ไม่พบโพสต์สำหรับแท็กนี้";
           return;
         }
 
-        const imageUrl = post.getAttribute("file_url");
+        let imageUrl = post.getAttribute("file_url") || "";
 
-        if (imageUrl) {
-          document.getElementById("randomImage").src = imageUrl;
-          document.getElementById("randomImage").alt = "Rule34 Image";
-        } else {
-          document.getElementById("randomImage").src = "";
-          document.getElementById("randomImage").alt = "ไม่พบ URL รูปภาพ";
+        // ถ้าเว็บคุณรันผ่าน https แต่ไฟล์เป็น http → ลองแปลงเป็น https
+        if (location.protocol === "https:" && imageUrl.startsWith("http://")) {
+          imageUrl = imageUrl.replace(/^http:\/\//i, "https://");
         }
 
+        imgEl.src = imageUrl;
+        imgEl.alt = "Rule34 Image";
+        statusEl.innerText = "โหลดสำเร็จ";
       } catch (err) {
         console.error(err);
-        document.getElementById("randomImage").src = "";
-        document.getElementById("randomImage").alt = "เกิดข้อผิดพลาด";
+        imgEl.src = "";
+        imgEl.alt = "เกิดข้อผิดพลาด";
+        statusEl.innerText = "เกิดข้อผิดพลาด: " + (err.message || err);
+      } finally {
+        btn.disabled = false;
       }
     }
   </script>
