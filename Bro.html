@@ -43,92 +43,67 @@
     button:hover {
       background: #2ECC00;
     }
-    #tag {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #ccc;
-    }
-    #statusLine {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #ffbb00;
-    }
   </style>
 </head>
 <body>
   <h1>สุ่มรูป Rule34</h1>
   <div class="container">
-    <div class="image-box">
-      <img id="randomImage" src="" alt="สุ่มรูปจะแสดงที่นี่">
+    <div class="image-box" id="imageBox">
+      <span id="message">คลิกปุ่มเพื่อสุ่มรูป</span>
+      <img id="randomImage" src="" alt="" style="display:none;">
     </div>
     <button onclick="getRandomImage()">สุ่มรูปใหม่</button>
-    <p id="tag"></p>
-    <p id="statusLine"></p>
   </div>
 
   <script>
-    const randomTags = [
-      "anime", "hentai", "girl", "cat_girl", "elf", "fox_girl",
-      "maid", "school_girl", "nurse", "dragon_girl"
-    ];
-
-    // ใช้ proxy เพื่อแก้ CORS (ถ้าไม่อยากใช้ ให้เปลี่ยน PROXY = "" แต่จะ error ถ้าโดนบล็อก)
-    const PROXY = "https://api.allorigins.win/raw?url=";
+    const tags = ["anime", "hentai", "girl", "cat_girl", "elf", "fox_girl", "maid", "school_girl", "nurse", "dragon_girl"];
 
     async function getRandomImage() {
-      const btn = document.querySelector("button");
-      const imgEl = document.getElementById("randomImage");
-      const tagEl = document.getElementById("tag");
-      const statusEl = document.getElementById("statusLine");
+      const imageEl = document.getElementById('randomImage');
+      const messageEl = document.getElementById('message');
+      imageEl.style.display = "none";
+      messageEl.textContent = "กำลังโหลด...";
 
       try {
-        btn.disabled = true;
-        statusEl.innerText = "กำลังโหลด...";
+        // เลือกแท็กแบบสุ่ม
+        const tag = tags[Math.floor(Math.random() * tags.length)];
 
-        // สุ่มแท็ก
-        const tags = randomTags[Math.floor(Math.random() * randomTags.length)];
-        tagEl.innerText = "แท็กที่เลือก: " + tags;
+        // ใช้ proxy CORS เพื่อ fetch หน้า Rule34
+        const proxy = "https://api.allorigins.win/get?url=";
+        const url = encodeURIComponent(`https://rule34.us/index.php?r=posts/index&q=${tag}`);
 
-        // API
-        const apiUrl = "https://rule34.xxx/index.php?page=dapi&s=post&q=index";
-        const params = new URLSearchParams({ tags, limit: "1", pid: "0" });
-        const fetchUrl = PROXY + encodeURIComponent(apiUrl + "&" + params.toString());
+        const response = await fetch(proxy + url);
+        const data = await response.json();
 
-        const resp = await fetch(fetchUrl);
-        if (!resp.ok) {
-          throw new Error("HTTP " + resp.status);
-        }
-        const xmlText = await resp.text();
-
-        // แปลง XML
+        // แปลง HTML เป็น DOM
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-        const post = xmlDoc.querySelector("post");
+        const doc = parser.parseFromString(data.contents, "text/html");
 
-        if (!post) {
-          imgEl.src = "";
-          imgEl.alt = "ไม่พบรูป";
-          statusEl.innerText = "ไม่พบโพสต์สำหรับแท็กนี้";
+        const thumbLinks = doc.querySelectorAll(".thumbail-container a");
+        if(thumbLinks.length === 0){
+          messageEl.textContent = "ไม่พบโพสต์สำหรับแท็ก: " + tag;
           return;
         }
 
-        let imageUrl = post.getAttribute("file_url") || "";
+        // เลือกลิงก์โพสต์แรกแบบสุ่ม
+        const postLink = thumbLinks[Math.floor(Math.random() * thumbLinks.length)].href;
 
-        // ถ้าเว็บคุณรันผ่าน https แต่ไฟล์เป็น http → ลองแปลงเป็น https
-        if (location.protocol === "https:" && imageUrl.startsWith("http://")) {
-          imageUrl = imageUrl.replace(/^http:\/\//i, "https://");
+        const postResponse = await fetch(proxy + encodeURIComponent(postLink));
+        const postData = await postResponse.json();
+        const postDoc = parser.parseFromString(postData.contents, "text/html");
+        const imgElPost = postDoc.querySelector(".content_push img");
+
+        if(imgElPost && (imgElPost.src.endsWith(".png") || imgElPost.src.endsWith(".jpg") || imgElPost.src.endsWith(".jpeg"))){
+          imageEl.src = imgElPost.src;
+          imageEl.style.display = "block";
+          messageEl.textContent = "Tags: " + tag;
+        } else {
+          messageEl.textContent = "เกิดข้อผิดพลาด: ไม่พบรูปภาพ";
         }
 
-        imgEl.src = imageUrl;
-        imgEl.alt = "Rule34 Image";
-        statusEl.innerText = "โหลดสำเร็จ";
-      } catch (err) {
+      } catch(err){
         console.error(err);
-        imgEl.src = "";
-        imgEl.alt = "เกิดข้อผิดพลาด";
-        statusEl.innerText = "เกิดข้อผิดพลาด: " + (err.message || err);
-      } finally {
-        btn.disabled = false;
+        document.getElementById('message').textContent = "เกิดข้อผิดพลาด: " + err;
       }
     }
   </script>
