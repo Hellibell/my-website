@@ -24,7 +24,7 @@
       justify-content: center;
       background: #222;
       transition: all 0.3s ease;
-      max-width: 90vw;  /* ปรับไม่ให้เกินหน้าจอ */
+      max-width: 90vw;
       max-height: 80vh;
     }
     img {
@@ -81,13 +81,11 @@
         if (data.images && data.images.length > 0) {
           const imgUrl = data.images[0].url;
 
-          // preload รูปก่อนแสดง
           const tempImg = new Image();
           tempImg.src = imgUrl;
           tempImg.onload = () => {
             imgElement.src = imgUrl;
 
-            // ปรับขนาด container ตามขนาดจริงของรูป แต่ไม่เกิน max-width/max-height
             const width = Math.min(tempImg.width, window.innerWidth * 0.9);
             const height = Math.min(tempImg.height, window.innerHeight * 0.8);
             imageBox.style.width = width + 'px';
@@ -102,7 +100,6 @@
       }
     }
 
-    // โหลดรูปแรกเมื่อเปิดเว็ปไซต์
     window.addEventListener('DOMContentLoaded', loadRandomImage);
   </script>
 </body>
