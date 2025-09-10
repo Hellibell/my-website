@@ -23,6 +23,7 @@
       align-items: center;
       justify-content: center;
       background: #222;
+      transition: all 0.3s ease;
       max-width: 90vw;
       max-height: 80vh;
     }
@@ -39,7 +40,7 @@
       border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 15px;
+      margin: 10px 5px 0 5px;
     }
     button:hover {
       background: #2ECC00;
@@ -56,12 +57,16 @@
     <div class="image-box" id="imageBox">
       <img id="randomImage" src="" alt="Random Image">
     </div>
-    <button onclick="loadRandomImage()">สุ่มรูปใหม่</button>
+    <div>
+      <button onclick="loadRandomImage()">สุ่มแบบดั้งเดิม</button>
+      <button onclick="loadNewRandomImage()">สุ่มแบบใหม่</button>
+    </div>
     <p class="error" id="errorMsg"></p>
   </div>
 
   <script>
-    const apiUrl = "https://random-nsfw.hellibell38.workers.dev/";
+    const nsfwTags = ["ass","hentai","milf","oral","paizuri","ecchi","ero"];
+    const newApiUrl = "https://random-nsfw.hellibell38.workers.dev/";
 
     async function loadRandomImage() {
       const errorMsg = document.getElementById('errorMsg');
@@ -69,22 +74,62 @@
       const imgElement = document.getElementById('randomImage');
       errorMsg.textContent = "";
 
-      try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("ไม่สามารถโหลด API รูปใหม่ได้");
-        const data = await response.json();
+      const randomTag = nsfwTags[Math.floor(Math.random() * nsfwTags.length)];
+      const apiURL = `https://api.waifu.im/search?included_tags=${randomTag}`;
 
+      try {
+        const response = await fetch(apiURL);
+        if (!response.ok) throw new Error("ไม่สามารถโหลด API รูปได้");
+
+        const data = await response.json();
+        if (data.images && data.images.length > 0) {
+          const imgUrl = data.images[0].url;
+
+          const tempImg = new Image();
+          tempImg.src = imgUrl;
+          tempImg.onload = () => {
+            imgElement.src = imgUrl;
+
+            const width = Math.min(tempImg.width, window.innerWidth * 0.9);
+            const height = Math.min(tempImg.height, window.innerHeight * 0.8);
+            imageBox.style.width = width + 'px';
+            imageBox.style.height = height + 'px';
+          };
+        } else {
+          throw new Error("ไม่พบรูปสำหรับแท็กนี้");
+        }
+      } catch (error) {
+        console.error(error);
+        errorMsg.textContent = "เกิดข้อผิดพลาดในการโหลดรูป!";
+      }
+    }
+
+    async function loadNewRandomImage() {
+      const errorMsg = document.getElementById('errorMsg');
+      const imageBox = document.getElementById('imageBox');
+      const imgElement = document.getElementById('randomImage');
+      errorMsg.textContent = "";
+
+      try {
+        const response = await fetch(newApiUrl);
+        if (!response.ok) throw new Error("ไม่สามารถโหลด API รูปใหม่ได้");
+
+        const data = await response.json();
         const imgUrl = data.content.url;
+
         const tempImg = new Image();
         tempImg.src = imgUrl;
         tempImg.onload = () => {
           imgElement.src = imgUrl;
-          imageBox.style.width = Math.min(tempImg.width, window.innerWidth * 0.9) + 'px';
-          imageBox.style.height = Math.min(tempImg.height, window.innerHeight * 0.8) + 'px';
+
+          const width = Math.min(tempImg.width, window.innerWidth * 0.9);
+          const height = Math.min(tempImg.height, window.innerHeight * 0.8);
+          imageBox.style.width = width + 'px';
+          imageBox.style.height = height + 'px';
         };
       } catch (error) {
         console.error(error);
-        errorMsg.textContent = "เกิดข้อผิดพลาดในการโหลดรูป!";
+        errorMsg.textContent = "เกิดข้อผิดพลาดในการโหลดรูปใหม่!";
       }
     }
 
