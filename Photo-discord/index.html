@@ -70,3 +70,21 @@
       const webhook = webhookInput.value.trim();
       const num_images = parseInt(numInput.value);
       if(!webhook || !num_images){ alert("กรุณากรอกทุกช่อง"); return; }
+
+      log(`เริ่มส่ง ${num_images} รูปไป Discord...`);
+
+      try {
+        const res = await fetch('/send-images', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ webhook, num_images })
+        });
+        const data = await res.json();
+        log(data.message);
+      } catch(err){
+        log('เกิดข้อผิดพลาด: ' + err);
+      }
+    });
+  </script>
+</body>
+</html>
