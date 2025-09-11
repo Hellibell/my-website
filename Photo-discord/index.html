@@ -52,39 +52,89 @@
 <body>
   <div class="container">
     <h2>ส่งรูปจาก API ไป Discord</h2>
-    <input type="text" id="webhook" placeholder="Webhook URL" size="50">
-    <input type="number" id="num_images" value="5" min="1" max="50">
-    <button id="sendBtn">ส่งรูป</button>
-    <div class="log" id="log"></div>
+
+    <label>Webhook URL:</label>
+    <input type="text" id="webhook" placeholder="ใส่ Discord Webhook ที่นี่"><br>
+
+    <label>จำนวนรูป:</label>
+    <input type="number" id="num_images" value="5" min="1" max="50"><br>
+
+    <button id="sendBtn">เริ่มส่งรูป</button>
+
+    <pre id="log"></pre>
   </div>
 
   <script>
-    const sendBtn = document.getElementById('sendBtn');
-    const webhookInput = document.getElementById('webhook');
-    const numInput = document.getElementById('num_images');
-    const logBox = document.getElementById('log');
+    const api_url = "https://random-nsfw.hellibell38.workers.dev/";
+    const delay_between = 200; // กำหนดตายตัว 200 ms
 
-    function log(msg){ logBox.textContent += msg + "\\n"; }
+    function log(msg) {
+      const logBox = document.getElementById("log");
+      logBox.textContent += msg + "\n";
+      logBox.scrollTop = logBox.scrollHeight;
+    }
 
-    sendBtn.addEventListener('click', async () => {
-      const webhook = webhookInput.value.trim();
-      const num_images = parseInt(numInput.value);
-      if(!webhook || !num_images){ alert("กรุณากรอกทุกช่อง"); return; }
+    async function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
-      log(`เริ่มส่ง ${num_images} รูปไป Discord...`);
+    async function sendUniqueImages() {
+      const webhook = document.getElementById("webhook").value.trim();
+      const num_images = parseInt(document.getElementById("num_images").value);
 
-      try {
-        const res = await fetch('/send-images', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ webhook, num_images })
-        });
-        const data = await res.json();
-        log(data.message);
-      } catch(err){
-        log('เกิดข้อผิดพลาด: ' + err);
+      if (!webhook) {
+        alert("กรุณาใส่ Webhook URL ก่อน");
+        return;
       }
-    });
+
+      const sent_urls = new Set();
+
+      for (let i = 1; i <= num_images;) {
+        try {
+          const res = await fetch(api_url, { headers: { "X-Requested-With": "XMLHttpRequest" } });
+          if (!res.ok) throw new Error("โหลดรูปไม่สำเร็จ");
+          const data = await res.json();
+          const img_url = data.content.url;
+
+          if (sent_urls.has(img_url)) {
+            log(`รูปซ้ำ ข้ามไป`);
+            continue;
+          }
+          sent_urls.add(img_url);
+
+          const payload = {
+            content: `ส่งรูป ${i}/${num_images} สำเร็จ 🎉`,
+            embeds: [
+              {
+                title: `รูปที่ ${i}`,
+                image: { url: img_url },
+                color: 0x3EFF00
+              }
+            ]
+          };
+
+          const resp = await fetch(webhook, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          if (resp.status === 204) {
+            log(`✅ ส่งรูป ${i} สำเร็จ`);
+          } else {
+            log(`❌ ส่งรูป ${i} ไม่สำเร็จ (status ${resp.status})`);
+          }
+
+          i++;
+        } catch (err) {
+          log(`⚠️ เกิดข้อผิดพลาดส่งรูป ${i}: ${err}`);
+        }
+
+        await sleep(delay_between);
+      }
+    }
+
+    document.getElementById("sendBtn").addEventListener("click", sendUniqueImages);
   </script>
 </body>
 </html>
