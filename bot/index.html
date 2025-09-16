@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Discord Bot Status</title>
+</head>
+<body>
+    <h1>Bot Status</h1>
+    <p id="status">Loading...</p>
+
+    <script>
+        async function fetchStatus() {
+            try {
+                const res = await fetch('/status'); // เรียก API ของ bot
+                const data = await res.json();
+                document.getElementById('status').innerText =
+                    `Name: ${data.name}, State: ${data.state}, Details: ${data.details}, Ping: ${data.ping} ms`;
+            } catch (e) {
+                document.getElementById('status').innerText = 'Error fetching status';
+            }
+        }
+
+        fetchStatus();
+        setInterval(fetchStatus, 5000); // อัปเดตทุก 5 วินาที
+    </script>
+</body>
+</html>
