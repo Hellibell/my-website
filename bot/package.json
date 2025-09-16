@@ -1,0 +1,21 @@
+{
+  "name": "discord-bot-web",
+  "version": "1.0.0",
+  "description": "Discord selfbot with Rich Presence and status page",
+  "main": "bot/index.js",
+  "scripts": {
+    "start": "node bot/index.js",
+    "dev": "nodemon bot/index.js"
+  },
+  "keywords": ["discord", "bot", "rich-presence", "status-page"],
+  "author": "YourName",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js-selfbot-v13": "^1.0.0",   // ใช้เวอร์ชันล่าสุด
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
