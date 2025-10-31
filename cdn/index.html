@@ -1,42 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ฝากรูป GitHub CDN</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f6fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    width: 350px;
+    text-align: center;
+  }
+  h2 {
+    color: #2f3640;
+    margin-bottom: 20px;
+  }
+  input[type="text"], input[type="password"], input[type="file"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 10px 0;
+    border: 1px solid #dcdde1;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: #4cd137;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover {
+    background: #44bd32;
+  }
+  .note {
+    font-size: 12px;
+    color: #718093;
+    margin-top: 10px;
+  }
+</style>
+</head>
 <body>
-  <h2>ฝากรูปไปยัง GitHub CDN</h2>
-  <input type="file" id="fileInput" />
+
+<div class="container">
+  <h2>ฝากรูป GitHub CDN</h2>
+
+  <input type="text" id="usernameInput" placeholder="GitHub Username">
+  <input type="password" id="tokenInput" placeholder="Personal Access Token">
+  <input type="file" id="fileInput">
+
   <button onclick="upload()">อัปโหลด</button>
 
-  <script>
-  async function upload() {
-    const file = document.getElementById("fileInput").files[0];
-    if (!file) return alert("กรุณาเลือกรูป");
+  <div class="note">
+    ⚠️ Token ของคุณจะไม่ถูกเก็บในระบบนี้
+  </div>
+</div>
 
-    const base64 = await toBase64(file);
-    const filename = file.name;
+<script>
+async function upload() {
+  const username = document.getElementById("usernameInput").value.trim();
+  const token = document.getElementById("tokenInput").value.trim();
+  const file = document.getElementById("fileInput").files[0];
 
-    const res = await fetch(`https://api.github.com/repos/<USERNAME>/cdn-images/contents/images/${filename}`, {
-      method: "PUT",
-      headers: {
-        "Authorization": "token <YOUR_GITHUB_TOKEN>",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: `upload ${filename}`,
-        content: base64.replace(/^data:.+;base64,/, "")
-      })
-    });
+  if (!username || !token) return alert("กรุณากรอก Username และ Token");
+  if (!file) return alert("กรุณาเลือกรูป");
 
-    const data = await res.json();
-    alert(`อัปโหลดสำเร็จ! URL: https://raw.githubusercontent.com/<USERNAME>/cdn-images/main/images/${filename}`);
+  const base64 = await toBase64(file);
+  const filename = file.name;
+
+  const res = await fetch(`https://api.github.com/repos/${username}/cdn-images/contents/images/${filename}`, {
+    method: "PUT",
+    headers: {
+      "Authorization": `token ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message: `upload ${filename}`,
+      content: base64.replace(/^data:.+;base64,/, "")
+    })
+  });
+
+  const data = await res.json();
+  if (data.content && data.content.download_url) {
+    alert(`อัปโหลดสำเร็จ! URL: ${data.content.download_url}`);
+  } else {
+    alert(`เกิดข้อผิดพลาด: ${JSON.stringify(data)}`);
   }
+}
 
-  function toBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-  </script>
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+</script>
+
 </body>
 </html>
