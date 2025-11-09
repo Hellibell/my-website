@@ -17,7 +17,7 @@
         transition: background 0.3s;
     }
     .box.copied {
-        background: #a2ff9f !important; /* สีเขียวเวลา Copy */
+        background: #a2ff9f !important; /* สีเขียวตอน Copy */
     }
     .text { font-size: 16px; word-break: break-all; }
     button {
@@ -30,6 +30,7 @@
     }
     button:hover { background: #0056c7; }
 </style>
+
 <script>
 function copyText(txt, boxId) {
     navigator.clipboard.writeText(txt);
@@ -39,7 +40,7 @@ function copyText(txt, boxId) {
 
     setTimeout(() => {
         box.classList.remove("copied");
-    }, 1000);
+    }, 3000); // 3 วินาที
 }
 </script>
 </head>
