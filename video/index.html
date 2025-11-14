@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ดูวิดีโอออนไลน์</title>
+<style>
+    body {
+        margin: 0;
+        background: #111;
+        color: #fff;
+        font-family: sans-serif;
+        display: flex;
+        height: 100vh;
+    }
+
+    /* กล่องวิดีโอ */
+    .player {
+        flex: 3;
+        padding: 20px;
+    }
+
+    iframe {
+        width: 100%;
+        height: 70vh;
+        border: none;
+        border-radius: 10px;
+    }
+
+    /* เพลลิสต์ */
+    .playlist {
+        flex: 1;
+        background: #1a1a1a;
+        padding: 20px;
+        overflow-y: auto;
+        border-left: 2px solid #333;
+    }
+
+    .episode {
+        padding: 12px;
+        background: #222;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .episode:hover {
+        background: #333;
+    }
+
+    .active {
+        background: #0a84ff !important;
+        color: #fff;
+    }
+</style>
+</head>
+<body>
+
+<div class="player">
+    <iframe id="videoPlayer" src="https://player.mediadelivery.net/embed/542328/e9911b15-9ef0-468f-98b8-61604bd35e13"></iframe>
+</div>
+
+<div class="playlist" id="playlist">
+    <div class="episode active" data-url="https://player.mediadelivery.net/embed/542328/e9911b15-9ef0-468f-98b8-61604bd35e13">ตอนที่ 1</div>
+    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/dda54882-891c-4f26-8055-3ddd972c42c9">ตอนที่ 2</div>
+    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/f68fdd64-6fc7-4fe4-a9a0-36ac40c065d3">ตอนที่ 3</div>
+    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/0ffd88d8-7ec7-44e3-bbac-a77e7df49d12">ตอนที่ 4</div>
+    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/e9e160da-48cb-4ea4-af7b-21dd2c5a83a7">ตอนที่ 5</div>
+    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/7ff32f88-ae36-46de-8ab7-2a0d12453d25">ตอนที่ 6</div>
+    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/8c452b24-3c17-4645-8296-a80d192ae7f7">ตอนที่ 7</div>
+    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/9d784477-5604-4650-9d97-7ee23610b6cd">ตอนที่ 8</div>
+</div>
+
+<script>
+    const player = document.getElementById("videoPlayer");
+    const episodes = document.querySelectorAll(".episode");
+
+    episodes.forEach(ep => {
+        ep.addEventListener("click", () => {
+            player.src = ep.dataset.url;
+
+            document.querySelector(".active").classList.remove("active");
+            ep.classList.add("active");
+        });
+    });
+</script>
+
+</body>
+</html>
 
