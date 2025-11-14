@@ -1,1 +1,144 @@
-hi
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Family Watch — ดูวิดีโอออนไลน์ในครอบครัว</title>
+  <style>
+    :root{--bg:#111;--card:#1f1f1f;--accent:#6c5ce7;--muted:#b0b0b0}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:white}
+
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+    .player-card{width:100%;max-width:980px;background:var(--card);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.7);overflow:hidden;display:grid;grid-template-columns:1fr 320px;gap:0}
+
+    /* Left: video area */
+    .left{padding:22px;background:linear-gradient(180deg,rgba(108,92,231,0.05),transparent)}
+    .video-wrap{border-radius:12px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
+    video{width:100%;height:auto;display:block;max-height:60vh;background:#000}
+
+    .controls-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .btn{background:transparent;border:0;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600;color:white}
+    .btn:active{transform:translateY(1px)}
+    .prev{color:var(--muted)}
+    .next{color:var(--accent)}
+
+    /* right: playlist / info */
+    .right{padding:22px;border-left:1px solid #333;background:linear-gradient(180deg,#1f1f1f,rgba(108,92,231,0.02))}
+    h3{margin:0 0 8px 0;font-size:18px}
+    p.muted{color:var(--muted);margin:0 0 14px 0}
+    .meta{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{background:#333;padding:6px 10px;border-radius:999px;font-size:13px;color:#b0b0b0}
+
+    .playlist{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+    .item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer}
+    .item:hover{background:#333}
+    .thumb{width:56px;height:40px;background:#222;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px}
+    .title{font-size:14px;color:white}
+    .small{font-size:12px;color:var(--muted)}
+
+    footer.note{padding:12px 22px;background:#111;border-top:1px solid #333;text-align:center;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:880px){
+      .player-card{grid-template-columns:1fr;max-width:680px}
+      .right{order:2}
+      .left{order:1}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="player-card" role="region" aria-label="Family video player card">
+
+      <!-- LEFT: Video -->
+      <div class="left">
+        <div class="video-wrap">
+          <video id="player" controls playsinline preload="metadata">
+            <source id="videoSource" src="https://drive.google.com/uc?export=download&id=1lEtaP5shXROUk2rQlZJCaqWYeUKrzgs8" type="video/mp4">
+            เบราว์เซอร์ของคุณไม่รองรับแท็กวิดีโอ
+          </video>
+        </div>
+
+        <div class="controls-row">
+          <button id="prevBtn" class="btn prev" title="ตอนก่อนหน้า">⟵ ตอนก่อนหน้า</button>
+          <div style="text-align:center">
+            <div style="font-weight:700">ตอนที่ 1</div>
+            <div style="font-size:13px;color:var(--muted)">ครอบครัว — ดูร่วมกัน</div>
+          </div>
+          <button id="nextBtn" class="btn next" title="ตอนถัดไป">ตอนถัดไป ⟶</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Playlist / Info -->
+      <aside class="right" aria-label="รายการวิดีโอและข้อมูล">
+        <h3>รายการตอน</h3>
+        <p class="muted">แตะชื่อเพื่อเปลี่ยนตอนหรือใช้ปุ่มด้านล่าง</p>
+        <div class="meta">
+          <div class="chip">ครอบครัว</div>
+          <div class="chip">ดูพร้อมกัน</div>
+          <div class="chip">ปลอดภัยสำหรับเด็ก</div>
+        </div>
+
+        <div class="playlist" id="playlist"></div>
+      </aside>
+
+      <footer class="note">ออกแบบสำหรับการชมวิดีโอของครอบครัว — ปรับแต่งได้ตามต้องการ</footer>
+    </div>
+  </div>
+
+  <script>
+    const videos = [
+      {id:'1lEtaP5shXROUk2rQlZJCaqWYeUKrzgs8', title:'ตอนที่ 1', src:'https://drive.google.com/uc?export=download&id=1lEtaP5shXROUk2rQlZJCaqWYeUKrzgs8'},
+      {id:'1rnfo-nOxKxWxK0OGtW8-x8VMa161-w1I', title:'ตอนที่ 2', src:'https://drive.google.com/uc?export=download&id=1rnfo-nOxKxWxK0OGtW8-x8VMa161-w1I'},
+      {id:'1oR_9xLix3SHeeQiOvIlzA9rgukIC8uEC', title:'ตอนที่ 3', src:'https://drive.google.com/uc?export=download&id=1oR_9xLix3SHeeQiOvIlzA9rgukIC8uEC'},
+      {id:'1ycHGdzD1AzIFePw5LlZr3jKosqbiJ5HC', title:'ตอนที่ 4', src:'https://drive.google.com/uc?export=download&id=1ycHGdzD1AzIFePw5LlZr3jKosqbiJ5HC'},
+      {id:'1BurdOZFWlKcLFfcOhTmM91hiWU50f1v7', title:'ตอนที่ 5', src:'https://drive.google.com/uc?export=download&id=1BurdOZFWlKcLFfcOhTmM91hiWU50f1v7'},
+      {id:'1yiQBKlfm81nquH5IWTkgZSA-P-l_7Zzq', title:'ตอนที่ 6', src:'https://drive.google.com/uc?export=download&id=1yiQBKlfm81nquH5IWTkgZSA-P-l_7Zzq'},
+      {id:'163097pc9DzGusewePAIyu1QAwyyAkYPO', title:'ตอนที่ 7', src:'https://drive.google.com/uc?export=download&id=163097pc9DzGusewePAIyu1QAwyyAkYPO'},
+      {id:'1LLq53MfPsN7jiHeh1TS6G00ryErTjtp-', title:'ตอนที่ 8', src:'https://drive.google.com/uc?export=download&id=1LLq53MfPsN7jiHeh1TS6G00ryErTjtp-'}
+    ];
+
+    const player = document.getElementById('player');
+    const source = document.getElementById('videoSource');
+    const playlistEl = document.getElementById('playlist');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let current = 0;
+
+    function renderPlaylist(){
+      playlistEl.innerHTML = '';
+      videos.forEach((v, i)=>{
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `\n          <div class="thumb">${i+1}</div>\n          <div style="flex:1">\n            <div class="title">${v.title}</div>\n            <div class="small">ไฟล์: ${v.id}</div>\n          </div>`;
+        el.addEventListener('click', ()=>{ loadVideo(i); });
+        if(i===current) el.style.background = 'linear-gradient(90deg, rgba(108,92,231,0.3), transparent)';
+        playlistEl.appendChild(el);
+      });
+    }
+
+    function loadVideo(index){
+      if(index < 0 || index >= videos.length) return;
+      current = index;
+      source.src = videos[current].src;
+      player.load();
+      player.play().catch(()=>{});
+      renderPlaylist();
+      updateInfo();
+    }
+
+    function updateInfo(){
+      const infoTitle = document.querySelector('.controls-row div');
+      if(infoTitle) infoTitle.innerHTML = `<div style=\"font-weight:700\">${videos[current].title}</div><div style=\"font-size:13px;color:var(--muted)\">ตอนที่ ${current+1}</div>`;
+    }
+
+    prevBtn.addEventListener('click', ()=>{ if(current > 0) loadVideo(current-1); else loadVideo(videos.length-1); });
+    nextBtn.addEventListener('click', ()=>{ if(current < videos.length-1) loadVideo(current+1); else loadVideo(0); });
+
+    renderPlaylist();
+    loadVideo(0);
+  </script>
+</body>
+</html>
