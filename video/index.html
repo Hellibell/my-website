@@ -1,90 +1,143 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>ดูวิดีโอออนไลน์</title>
-<style>
-    body {
-        margin: 0;
-        background: #111;
-        color: #fff;
-        font-family: sans-serif;
-        display: flex;
-        height: 100vh;
-    }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>อ๊ากกก</title>
+  <style>
+    :root{--bg:#111;--card:#1f1f1f;--accent:#6c5ce7;--muted:#b0b0b0}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:white}
 
-    /* กล่องวิดีโอ */
-    .player {
-        flex: 3;
-        padding: 20px;
-    }
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+    .player-card{width:100%;max-width:980px;background:var(--card);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,0.7);overflow:hidden;display:grid;grid-template-columns:1fr 320px;gap:0}
 
-    iframe {
-        width: 100%;
-        height: 70vh;
-        border: none;
-        border-radius: 10px;
-    }
+    /* Video Area */
+    .left{padding:22px;background:linear-gradient(180deg,rgba(108,92,231,0.05),transparent)}
+    .video-wrap{border-radius:12px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
+    iframe{width:100%;height:60vh;border:0;border-radius:12px}
 
-    /* เพลลิสต์ */
-    .playlist {
-        flex: 1;
-        background: #1a1a1a;
-        padding: 20px;
-        overflow-y: auto;
-        border-left: 2px solid #333;
-    }
+    .controls-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .btn{background:transparent;border:0;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600;color:white}
+    .btn:active{transform:translateY(1px)}
+    .prev{color:var(--muted)}
+    .next{color:var(--accent)}
 
-    .episode {
-        padding: 12px;
-        background: #222;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
+    /* Playlist */
+    .right{padding:22px;border-left:1px solid #333;background:linear-gradient(180deg,#1f1f1f,rgba(108,92,231,0.02))}
+    h3{margin:0 0 8px 0;font-size:18px}
+    p.muted{color:var(--muted);margin:0 0 14px 0}
+    .meta{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{background:#333;padding:6px 10px;border-radius:999px;font-size:13px;color:#b0b0b0}
 
-    .episode:hover {
-        background: #333;
-    }
+    .playlist{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+    .item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer}
+    .item:hover{background:#333}
+    .thumb{width:56px;height:40px;background:#222;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px}
+    .title{font-size:14px;color:white}
+    .small{font-size:12px;color:var(--muted)}
 
-    .active {
-        background: #0a84ff !important;
-        color: #fff;
+    footer.note{padding:12px 22px;background:#111;border-top:1px solid #333;text-align:center;color:var(--muted);font-size:13px}
+
+    @media (max-width:880px){
+      .player-card{grid-template-columns:1fr;max-width:680px}
+      .right{order:2}
+      .left{order:1}
     }
-</style>
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="player-card">
 
-<div class="player">
-    <iframe id="videoPlayer" src="https://player.mediadelivery.net/embed/542328/e9911b15-9ef0-468f-98b8-61604bd35e13"></iframe>
-</div>
+      <!-- LEFT: PLAYER -->
+      <div class="left">
+        <div class="video-wrap">
+          <iframe id="player" src=""></iframe>
+        </div>
 
-<div class="playlist" id="playlist">
-    <div class="episode active" data-url="https://player.mediadelivery.net/embed/542328/e9911b15-9ef0-468f-98b8-61604bd35e13">ตอนที่ 1</div>
-    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/dda54882-891c-4f26-8055-3ddd972c42c9">ตอนที่ 2</div>
-    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/f68fdd64-6fc7-4fe4-a9a0-36ac40c065d3">ตอนที่ 3</div>
-    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/0ffd88d8-7ec7-44e3-bbac-a77e7df49d12">ตอนที่ 4</div>
-    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/e9e160da-48cb-4ea4-af7b-21dd2c5a83a7">ตอนที่ 5</div>
-    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/7ff32f88-ae36-46de-8ab7-2a0d12453d25">ตอนที่ 6</div>
-    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/8c452b24-3c17-4645-8296-a80d192ae7f7">ตอนที่ 7</div>
-    <div class="episode" data-url="https://player.mediadelivery.net/embed/542328/9d784477-5604-4650-9d97-7ee23610b6cd">ตอนที่ 8</div>
-</div>
+        <div class="controls-row">
+          <button id="prevBtn" class="btn prev">⟵ ตอนก่อนหน้า</button>
+          <div id="episodeInfo" style="text-align:center">
+            <div style="font-weight:700">ตอนที่ 1</div>
+            <div style="font-size:13px;color:var(--muted)"> — </div>
+          </div>
+          <button id="nextBtn" class="btn next">ตอนถัดไป ⟶</button>
+        </div>
+      </div>
 
-<script>
-    const player = document.getElementById("videoPlayer");
-    const episodes = document.querySelectorAll(".episode");
+      <!-- RIGHT: PLAYLIST -->
+      <aside class="right">
+        <h3>รายการตอน</h3>
+        <p class="muted">แตะชื่อเพื่อเปลี่ยนตอน</p>
 
-    episodes.forEach(ep => {
-        ep.addEventListener("click", () => {
-            player.src = ep.dataset.url;
+        <div class="meta">
+          
+        </div>
 
-            document.querySelector(".active").classList.remove("active");
-            ep.classList.add("active");
-        });
-    });
-</script>
+        <div class="playlist" id="playlist"></div>
+      </aside>
 
+      <footer class="note"> — </footer>
+    </div>
+  </div>
+
+  <script>
+    const videos = [
+      {title:'ตอนที่ 1', src:'https://player.mediadelivery.net/embed/542328/e9911b15-9ef0-468f-98b8-61604bd35e13'},
+      {title:'ตอนที่ 2', src:'https://player.mediadelivery.net/embed/542328/dda54882-891c-4f26-8055-3ddd972c42c9'},
+      {title:'ตอนที่ 3', src:'https://player.mediadelivery.net/embed/542328/f68fdd64-6fc7-4fe4-a9a0-36ac40c065d3'},
+      {title:'ตอนที่ 4', src:'https://player.mediadelivery.net/embed/542328/0ffd88d8-7ec7-44e3-bbac-a77e7df49d12'},
+      {title:'ตอนที่ 5', src:'https://player.mediadelivery.net/embed/542328/e9e160da-48cb-4ea4-af7b-21dd2c5a83a7'},
+      {title:'ตอนที่ 6', src:'https://player.mediadelivery.net/embed/542328/7ff32f88-ae36-46de-8ab7-2a0d12453d25'},
+      {title:'ตอนที่ 7', src:'https://player.mediadelivery.net/embed/542328/8c452b24-3c17-4645-8296-a80d192ae7f7'},
+      {title:'ตอนที่ 8', src:'https://player.mediadelivery.net/embed/542328/9d784477-5604-4650-9d97-7ee23610b6cd'},
+    ];
+
+    const player = document.getElementById("player");
+    const playlistEl = document.getElementById("playlist");
+    const info = document.getElementById("episodeInfo");
+
+    let current = 0;
+
+    function renderPlaylist(){
+      playlistEl.innerHTML = "";
+      videos.forEach((v,i)=>{
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <div class="thumb">${i+1}</div>
+          <div style="flex:1">
+            <div class="title">${v.title}</div>
+            <div class="small">ตอนที่ ${i+1}</div>
+          </div>
+        `;
+        el.onclick = ()=> loadVideo(i);
+        if(i===current) el.style.background="linear-gradient(90deg,rgba(108,92,231,0.3),transparent)";
+        playlistEl.appendChild(el);
+      });
+    }
+
+    function loadVideo(i){
+      current = i;
+      player.src = videos[i].src;
+      info.innerHTML = `
+        <div style="font-weight:700">${videos[i].title}</div>
+        <div style="font-size:13px;color:var(--muted)">ตอนที่ ${i+1}</div>
+      `;
+      renderPlaylist();
+    }
+
+    document.getElementById("prevBtn").onclick = () => {
+      loadVideo((current - 1 + videos.length) % videos.length);
+    };
+
+    document.getElementById("nextBtn").onclick = () => {
+      loadVideo((current + 1) % videos.length);
+    };
+
+    renderPlaylist();
+    loadVideo(0);
+  </script>
 </body>
 </html>
-
