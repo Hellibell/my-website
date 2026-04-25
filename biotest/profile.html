@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akryst — Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050d1a;
+    --accent: #3af0ff;
+    --accent2: #ff4d6d;
+    --glass: rgba(10, 30, 60, 0.55);
+    --glass-border: rgba(58, 240, 255, 0.15);
+    --text: #e8f4ff;
+    --muted: #6a8aaa;
+    --online: #3dff8f;
+    --card-bg: rgba(8, 20, 45, 0.72);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Oxanium', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  /* ── Starfield ── */
+  .stars {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(20, 60, 120, 0.4) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(10, 30, 80, 0.5) 0%, transparent 60%),
+      #050d1a;
+  }
+  .stars::before, .stars::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 35% 40%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 20%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(2px 2px at 75% 10%, rgba(200,220,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 80%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 60% 75%, rgba(200,240,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 35%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 5% 50%, rgba(180,220,255,0.5) 0%, transparent 100%);
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+  .stars::after {
+    background-image:
+      radial-gradient(1px 1px at 25% 25%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 50%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 70%, rgba(200,240,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 65%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(2px 2px at 95% 15%, rgba(180,200,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 90%, rgba(255,255,255,0.4) 0%, transparent 100%);
+    animation-delay: 2s;
+    animation-duration: 6s;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+
+  /* ── Moon ── */
+  .moon {
+    position: fixed;
+    top: 6%; right: 10%;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 35%, #f0f4ff, #c8d8f0 45%, #8aabcc 100%);
+    box-shadow: 0 0 40px rgba(200,220,255,0.3), 0 0 80px rgba(150,190,240,0.15);
+    z-index: 1;
+    animation: moonGlow 8s ease-in-out infinite alternate;
+  }
+  .moon::before {
+    content: '';
+    position: absolute;
+    top: 18%; left: 20%;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: rgba(140,170,200,0.4);
+    box-shadow: 28px 10px 0 8px rgba(140,170,200,0.25), 12px 30px 0 6px rgba(140,170,200,0.3);
+  }
+  @keyframes moonGlow {
+    0% { box-shadow: 0 0 40px rgba(200,220,255,0.3), 0 0 80px rgba(150,190,240,0.15); }
+    100% { box-shadow: 0 0 60px rgba(200,220,255,0.5), 0 0 120px rgba(150,190,240,0.25); }
+  }
+
+  /* ── Atmospheric aurora ── */
+  .aurora {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 120% 40% at 50% 0%, rgba(0, 80, 160, 0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 30% at 20% 100%, rgba(0, 40, 80, 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 20% at 80% 100%, rgba(5, 50, 90, 0.25) 0%, transparent 60%);
+    animation: auroraShift 12s ease-in-out infinite alternate;
+  }
+  @keyframes auroraShift {
+    0% { opacity: 0.7; transform: scaleX(1); }
+    100% { opacity: 1; transform: scaleX(1.05); }
+  }
+
+  /* ── Layout ── */
+  .page {
+    position: relative; z-index: 10;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Now Playing (top-left) ── */
+  .now-playing {
+    position: fixed;
+    top: 18px; left: 18px;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    backdrop-filter: blur(14px);
+    animation: fadeSlideIn 0.8s ease both;
+    z-index: 20;
+  }
+  .now-playing .label {
+    color: var(--online);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 4px;
+  }
+  .dot-pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--online);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .now-playing .song-title {
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+  }
+  .now-playing .song-artist {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 1px;
+  }
+
+  /* ── Music player (bottom-left) ── */
+  .music-player {
+    position: fixed;
+    bottom: 22px; left: 18px;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--online);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    backdrop-filter: blur(14px);
+    z-index: 20;
+    animation: fadeSlideUp 1s ease both 0.4s;
+  }
+  .music-player .vol-bar {
+    width: 70px; height: 3px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .music-player .vol-fill {
+    height: 100%;
+    width: 35%;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .music-player svg { width: 14px; height: 14px; fill: var(--muted); }
+  .btn-pause {
+    background: none; border: none; cursor: pointer;
+    color: var(--text); font-size: 12px; padding: 0;
+  }
+
+  /* ── Main Profile Card ── */
+  .profile-card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 40px 44px;
+    width: 420px;
+    backdrop-filter: blur(24px);
+    box-shadow: 0 20px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(58,240,255,0.05) inset;
+    animation: cardIn 1s cubic-bezier(0.16,1,0.3,1) both 0.1s;
+    position: relative;
+  }
+  .profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.5;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Avatar section */
+  .profile-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 22px;
+  }
+
+  .avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .avatar-ring {
+    position: absolute; inset: -5px;
+    border-radius: 50%;
+    border: 2.5px solid transparent;
+    background: conic-gradient(var(--accent2), var(--accent), var(--accent2)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    animation: spinRing 6s linear infinite;
+  }
+  @keyframes spinRing {
+    to { transform: rotate(360deg); }
+  }
+  .avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: linear-gradient(135deg, #0a2040, #1a4080);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    overflow: hidden;
+    position: relative;
+  }
+  .avatar-inner {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #1a6080, #0a2050 60%, #050d20);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-inner::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 40% 35%, rgba(58,240,255,0.3), transparent 65%);
+  }
+
+  /* Sparkle badge */
+  .sparkle-badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    color: var(--accent);
+    font-size: 18px;
+    filter: drop-shadow(0 0 6px var(--accent));
+    animation: sparklePop 3s ease-in-out infinite;
+  }
+  @keyframes sparklePop {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+    50% { transform: scale(1.3) rotate(20deg); opacity: 1; }
+  }
+
+  /* Alert badge */
+  .alert-badge {
+    position: absolute;
+    bottom: 0; left: -2px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  }
+
+  .profile-info { flex: 1; padding-top: 4px; }
+  .profile-name {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .badge-heart {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent2);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+  .badge-circle {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--muted);
+    opacity: 0.6;
+  }
+  .profile-tags {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.6;
+  }
+  .profile-tags span { color: rgba(255,255,255,0.35); }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+    margin: 20px 0;
+  }
+
+  /* Social links */
+  .social-links {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+  .social-btn {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.04);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .social-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(58,240,255,0.07);
+    box-shadow: 0 0 14px rgba(58,240,255,0.2);
+    transform: translateY(-2px);
+  }
+  .social-btn svg { width: 17px; height: 17px; fill: currentColor; }
+
+  /* System Status */
+  .status-panel {
+    background: rgba(5, 15, 35, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .status-header {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .online-indicator {
+    display: flex; align-items: center; gap: 5px;
+    color: var(--online); font-size: 10px;
+  }
+  .online-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--online);
+    box-shadow: 0 0 8px var(--online);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 12px;
+  }
+  .status-row + .status-row {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin-top: 4px;
+    padding-top: 9px;
+  }
+  .status-key { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; }
+  .status-val { font-weight: 600; letter-spacing: 0.05em; }
+  .status-val.mono { font-family: 'Space Mono', monospace; font-size: 11px; }
+
+  /* Bottom credits */
+  .page-credit {
+    position: fixed;
+    bottom: 22px; left: 50%; transform: translateX(-50%);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+    z-index: 20;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="aurora"></div>
+<div class="moon"></div>
+
+<!-- Now Playing -->
+<div class="now-playing">
+  <div class="label">
+    <div class="dot-pulse"></div>
+    Akryst is listening to
+  </div>
+  <div class="song-title">I Just Wanna</div>
+  <div class="song-artist">Kali</div>
+</div>
+
+<!-- Music Player -->
+<div class="music-player">
+  <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
+  <div class="vol-bar"><div class="vol-fill"></div></div>
+  <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+  <span style="color:var(--muted)">MUSIC PLAYER</span>
+  <button class="btn-pause">⏸</button>
+</div>
+
+<!-- Main Page -->
+<div class="page">
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-wrap">
+        <div class="avatar-ring"></div>
+        <div class="avatar-inner">🌌</div>
+        <div class="sparkle-badge">✦</div>
+        <div class="alert-badge">!</div>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">
+          Akryst
+          <span class="badge-heart">♥</span>
+          <span class="badge-circle"></span>
+        </div>
+        <div class="profile-tags">
+          Music Lover <span>•</span> Avatar Editor <span>•</span> VR Enthusiast <span>•</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Social Links -->
+    <div class="social-links">
+      <!-- GitHub -->
+      <a href="#" class="social-btn" title="GitHub">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      </a>
+      <!-- X -->
+      <a href="#" class="social-btn" title="X (Twitter)">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.258 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <!-- Last.fm -->
+      <a href="#" class="social-btn" title="Last.fm" style="font-size:11px; font-weight:700;">as</a>
+      <!-- osu! -->
+      <a href="#" class="social-btn" title="osu!" style="font-size:10px; font-weight:700;">osu!</a>
+      <!-- VR -->
+      <a href="#" class="social-btn" title="VRChat">
+        <svg viewBox="0 0 24 24"><path d="M20.5 6c-2.61.7-5.67 1-8.5 1s-5.89-.3-8.5-1L3 8c1.86.5 4 .83 6 1v13h2v-6h2v6h2V9c2-.17 4.14-.5 6-1l-.5-2z"/><circle cx="12" cy="4" r="2"/></svg>
+      </a>
+      <!-- Steam -->
+      <a href="#" class="social-btn" title="Steam">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.888 3.525 8.974 8.208 9.818l-.003-.009-2.065-8.523c-.025-.099-.04-.2-.04-.303 0-.786.589-1.45 1.368-1.546l.144-.009h.153c.736 0 1.381.477 1.59 1.168l1.59 5.386c.15-.021.302-.032.455-.032 2.21 0 4-1.79 4-4s-1.79-4-4-4c-1.838 0-3.402 1.237-3.87 2.93l-.01.038-1.036-4.275A9.937 9.937 0 0112 6a6 6 0 110 12c-.12 0-.24-.004-.358-.012l1.566 6.467A10.01 10.01 0 0022 12c0-5.523-4.477-10-10-10zm1.5 8.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5z"/></svg>
+      </a>
+    </div>
+
+    <!-- Status Panel -->
+    <div class="status-panel">
+      <div class="status-header">
+        SYSTEM STATUS
+        <div class="online-indicator">
+          <div class="online-dot"></div>
+          Online
+        </div>
+      </div>
+      <div class="status-row">
+        <span class="status-key">Location</span>
+        <span class="status-val">Popcorn Palace</span>
+      </div>
+      <div class="status-row">
+        <span class="status-key">Local Time</span>
+        <span class="status-val mono" id="clock">07:19:21</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-credit">music.connect.[pages]</div>
+
+<script>
+  // Live clock
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
