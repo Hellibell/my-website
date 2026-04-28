@@ -352,9 +352,33 @@
     0%   { filter: hue-rotate(0deg); }
     100% { filter: hue-rotate(360deg); }
   }
+  
+ .const bgs = [
+  "assets/svg-bg/bg-1.svg",
+  "assets/svg-bg/bg-2.svg",
+  "assets/svg-bg/bg-3.svg",
+  "assets/svg-bg/bg-4.svg"
+];
+
+let index = 0;
+const bg = document.getElementById("bgSVG");
+
+function changeBg() {
+  bg.src = bgs[index];
+  index = (index + 1) % bgs.length;
+}
+
+changeBg();
+setInterval(changeBg, 5000);
+</script>
+</body>
 </style>
 </head>
 <body>
+<body>
+
+<img id="bgSVG" src="assets/svg-bg/bg-1.svg">
+<canvas id="bgCanvas"></canvas>
 
 <!-- Canvas พื้นหลัง (ดาว, ดวงจันทร์, ดาวตก) -->
 <canvas id="bgCanvas"></canvas>
@@ -766,7 +790,26 @@
       setTimeout(tick, phase === 'typing' ? 80 : phase === 'deleting' ? 50 : 20);
     }
     setTimeout(tick, 800);
-  })();
+    
+  }
+  #bgSVG {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+#bgCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  
+})();
 </script>
 </body>
 </html>
