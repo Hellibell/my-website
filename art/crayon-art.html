@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🖍️ แปลงภาพสีเทียน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #f06daa;
+    --purple: #a060e0;
+    --soft-pink: #ffd6ec;
+    --soft-purple: #e8d6ff;
+    --text-pink: #c0508a;
+    --text-purple: #8040c0;
+  }
+
+  body {
+    font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #fff5fb 0%, #fef0ff 50%, #f0f4ff 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 60px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Floating deco bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(240,109,170,0.08) 0%, transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(160,96,224,0.08) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .floating-deco {
+    position: fixed;
+    font-size: 24px;
+    pointer-events: none;
+    opacity: 0.15;
+    animation: floatAround 8s ease-in-out infinite;
+  }
+  .floating-deco:nth-child(1) { top: 8%; left: 5%; animation-delay: 0s; }
+  .floating-deco:nth-child(2) { top: 20%; right: 6%; animation-delay: 1.5s; }
+  .floating-deco:nth-child(3) { top: 55%; left: 3%; animation-delay: 3s; }
+  .floating-deco:nth-child(4) { top: 70%; right: 4%; animation-delay: 4.5s; }
+  .floating-deco:nth-child(5) { top: 88%; left: 10%; animation-delay: 2s; }
+
+  @keyframes floatAround {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-18px) rotate(10deg); }
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s ease both;
+  }
+  .header-icons { font-size: 36px; letter-spacing: 6px; margin-bottom: 10px; }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
+  .header p { color: #b080c0; font-size: 14px; margin-top: 6px; }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: 24px;
+    padding: 22px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 6px 28px rgba(200,100,200,0.10);
+    margin-bottom: 18px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.2s; }
+  .card:nth-child(4) { animation-delay: 0.3s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-upload { border: 2.5px dashed #f0c0e0; }
+  .card-generate { border: 2.5px solid #ffd6ec; }
+  .card-result { border: 3px solid var(--soft-pink); box-shadow: 0 8px 40px rgba(220,100,180,0.18); }
+
+  .card-label {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-pink);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Upload area */
+  .upload-area {
+    border: 2.5px dashed #e8b0d8;
+    border-radius: 16px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    background: linear-gradient(135deg, #fff8fc, #f8f0ff);
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .upload-area:hover { border-color: var(--pink); background: #fff0f8; }
+  .upload-area .upload-icon { font-size: 52px; }
+  .upload-area .upload-text { color: var(--text-pink); font-weight: 700; font-size: 15px; }
+  .upload-area .upload-sub { color: #d0a0c0; font-size: 12px; }
+
+  .preview-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .preview-img {
+    width: 90px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 3px solid #ffd0ec;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(240,109,170,0.2);
+  }
+  .preview-info { display: flex; flex-direction: column; gap: 10px; }
+  .success-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #f0fff4;
+    border: 1.5px solid #86efac;
+    border-radius: 99px;
+    padding: 4px 12px;
+    color: #22c55e;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .btn-change {
+    background: #f8f0ff;
+    border: 1.5px solid #d0b0e0;
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    color: var(--text-purple);
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .btn-change:hover { background: #efe0ff; }
+
+  /* Main button */
+  .btn-generate {
+    width: 100%;
+    padding: 17px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #7030b0;
+    transition: all 0.15s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-generate:active { transform: translateY(4px); box-shadow: 0 1px 0 #7030b0; }
+  .btn-generate:disabled {
+    background: linear-gradient(135deg, #e0c0d8, #c0b0d8);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .spinner { display: inline-block; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Error */
+  .error-box {
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: #fff0f0;
+    border: 1.5px solid #ffc0c0;
+    border-radius: 14px;
+    color: #d05050;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  /* Result SVG */
+  .svg-container {
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid #ffeef8;
+    background: white;
+  }
+  .svg-container svg { width: 100%; height: auto; display: block; }
+
+  .result-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .btn-retry {
+    flex: 1;
+    padding: 13px;
+    background: #f8f0ff;
+    border: 2px solid #d0b0e0;
+    border-radius: 14px;
+    cursor: pointer;
+    color: var(--text-purple);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .btn-retry:hover { background: #efe0ff; }
+
+  .btn-save {
+    flex: 1;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    box-shadow: 0 3px 0 #7030b0;
+    transition: all 0.15s;
+  }
+  .btn-save:active { transform: translateY(3px); box-shadow: none; }
+
+  /* Footer */
+  .footer {
+    margin-top: 36px;
+    font-size: 26px;
+    letter-spacing: 8px;
+    color: #e8b0d8;
+    opacity: 0.7;
+  }
+
+  #file-input { display: none; }
+  #card-generate { display: none; }
+  #card-result { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Floating decorations -->
+<div class="floating-deco">🌸</div>
+<div class="floating-deco">⭐</div>
+<div class="floating-deco">🍭</div>
+<div class="floating-deco">☁️</div>
+<div class="floating-deco">💜</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-icons">🖍️ 🌸 ✨</div>
+  <h1>แปลงภาพสีเทียน</h1>
+  <p>วาดใหม่ให้น่ารักแบบเด็กๆ 💜</p>
+</div>
+
+<!-- Card 1: Upload -->
+<div class="card card-upload">
+  <div class="card-label">📷 ขั้นตอนที่ 1: เลือกรูปภาพ</div>
+  <input type="file" id="file-input" accept="image/*">
+
+  <div id="upload-area" class="upload-area" onclick="document.getElementById('file-input').click()">
+    <div class="upload-icon">📁</div>
+    <div class="upload-text">แตะเพื่อเลือกรูปภาพ</div>
+    <div class="upload-sub">รองรับ JPG, PNG, WEBP</div>
+  </div>
+
+  <div id="preview-area" style="display:none">
+    <div class="preview-row">
+      <img id="preview-img" class="preview-img" src="" alt="Preview">
+      <div class="preview-info">
+        <div class="success-badge">✅ โหลดรูปสำเร็จ!</div>
+        <button class="btn-change" onclick="document.getElementById('file-input').click()">🔄 เปลี่ยนรูป</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card 2: Generate -->
+<div class="card card-generate" id="card-generate">
+  <div class="card-label">🎨 ขั้นตอนที่ 2: สร้างภาพสีเทียน</div>
+  <button class="btn-generate" id="btn-generate" onclick="generateArt()">
+    🖍️ สร้างภาพสีเทียน!
+  </button>
+  <div id="error-box" class="error-box" style="display:none"></div>
+</div>
+
+<!-- Card 3: Result -->
+<div class="card card-result" id="card-result">
+  <div class="card-label">✨ ภาพสีเทียนของคุณ!</div>
+  <div class="svg-container" id="svg-container"></div>
+  <div class="result-actions">
+    <button class="btn-retry" onclick="generateArt()">🔄 วาดใหม่</button>
+    <button class="btn-save" onclick="downloadSVG()">💾 บันทึก SVG</button>
+  </div>
+</div>
+
+<div class="footer">🌸 ⭐ 🍭 ☁️ 💜</div>
+
+<script>
+  let imageBase64 = null;
+  let currentSVG = null;
+
+  document.getElementById('file-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const dataUrl = ev.target.result;
+      imageBase64 = dataUrl.split(',')[1];
+
+      // Show preview
+      document.getElementById('upload-area').style.display = 'none';
+      document.getElementById('preview-area').style.display = 'block';
+      document.getElementById('preview-img').src = dataUrl;
+
+      // Show generate card
+      document.getElementById('card-generate').style.display = 'block';
+
+      // Reset result
+      document.getElementById('card-result').style.display = 'none';
+      document.getElementById('error-box').style.display = 'none';
+      currentSVG = null;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  async function generateArt() {
+    if (!imageBase64) return;
+
+    const btn = document.getElementById('btn-generate');
+    const errorBox = document.getElementById('error-box');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner">🌸</span> AI กำลังวาดภาพ...';
+    errorBox.style.display = 'none';
+    document.getElementById('card-result').style.display = 'none';
+
+    try {
+      const prompt = `You are a children's crayon art SVG generator. Look at this image carefully and recreate the scene as a complete SVG artwork that looks like a 10-year-old child drew it with crayons on white paper.
+
+STRICT OUTPUT RULES:
+- Output ONLY raw SVG code. Start exactly with <svg and end exactly with </svg>
+- No markdown backticks, no explanation, no preamble
+- SVG must have: width="600" height="700" viewBox="0 0 600 700"
+
+STYLE RULES:
+- Start with white background: <rect width="600" height="700" fill="white"/>
+- Use thick, slightly wobbly crayon-like strokes (imperfect paths)
+- Simplify shapes drastically — childlike, NOT realistic
+- Match original colors (purple shirt, dark hair, skin tones)
+- Big round head, simplified facial features, expressive eyes
+- Show the raised fist gesture from the original
+
+DECORATION RULES (required):
+- Add 4-5 four-pointed sparkle stars ✦ around figure (like in original photo)
+- Add cute flowers (circles with petal paths) in corners
+- Add small hearts scattered around
+- Add a fluffy cloud shape
+- Add small candy/lollipop shape
+
+TEXT (required):
+- Add "สู้ๆนะ" text at the bottom center in a bold, fun style
+- Use font-size 36, fill with gradient or bright color, slightly rotated/playful
+
+Make it feel joyful, innocent, and sweet like a child's proud artwork!`;
+
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4000,
+          messages: [{
+            role: 'user',
+            content: [
+              {
+                type: 'image',
+                source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 }
+              },
+              { type: 'text', text: prompt }
+            ]
+          }]
+        })
+      });
+
+      const data = await response.json();
+      const text = (data.content || []).map(b => b.text || '').join('');
+
+      const svgMatch = text.match(/<svg[\s\S]*?<\/svg>/i);
+      if (svgMatch) {
+        currentSVG = svgMatch[0];
+        document.getElementById('svg-container').innerHTML = currentSVG;
+        document.getElementById('card-result').style.display = 'block';
+        document.getElementById('card-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        throw new Error('ไม่พบ SVG ในผลลัพธ์ กรุณาลองใหม่อีกครั้ง');
+      }
+
+    } catch (e) {
+      errorBox.textContent = '⚠️ ' + e.message;
+      errorBox.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '🖍️ สร้างภาพสีเทียน!';
+    }
+  }
+
+  function downloadSVG() {
+    if (!currentSVG) return;
+    const blob = new Blob([currentSVG], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'crayon-art.svg';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
